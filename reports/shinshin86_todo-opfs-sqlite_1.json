@@ -1,0 +1,511 @@
+{
+  "pullRequest": {
+    "owner": "shinshin86",
+    "repo": "todo-opfs-sqlite",
+    "number": 1
+  },
+  "fileReviews": [
+    {
+      "file": "src/db.ts",
+      "codeQuality": {
+        "file": "src/db.ts",
+        "issues": [
+          {
+            "line": 1,
+            "severity": "medium",
+            "category": "best-practice",
+            "description": "@ts-ignore directive suppresses TypeScript type checking for the entire import, masking potential type errors",
+            "suggestion": "Install type definitions for 'neverchange' (@types/neverchange) or create a declaration file (neverchange.d.ts) with proper types. If types don't exist, use a more targeted @ts-expect-error with a comment explaining why."
+          },
+          {
+            "line": 3,
+            "severity": "high",
+            "category": "maintainability",
+            "description": "Module-level mutable state 'db' typed as 'any' eliminates type safety and creates potential race conditions",
+            "suggestion": "Define a proper type/interface for NeverChangeDB and use it: 'let db: NeverChangeDB | null = null;'. Consider using a singleton pattern or dependency injection to manage the database instance more safely."
+          },
+          {
+            "line": 7,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Condition 'if(db) db;' has no effect - it checks if db exists but doesn't return early, allowing re-initialization",
+            "suggestion": "Add 'return;' statement: 'if(db) return;' or 'if(db) { return; }' to prevent re-initialization of the database instance."
+          },
+          {
+            "line": 7,
+            "severity": "low",
+            "category": "style",
+            "description": "Missing space after 'if' keyword - inconsistent with common formatting standards",
+            "suggestion": "Add space: 'if (db) return;' to follow standard JavaScript/TypeScript formatting conventions."
+          },
+          {
+            "line": 13,
+            "severity": "medium",
+            "category": "maintainability",
+            "description": "Migration callback parameters typed as 'any' lose type safety",
+            "suggestion": "Define proper types for migration callbacks or import the type from neverchange library: 'up: async (db: NeverChangeDB) => { ... }'"
+          },
+          {
+            "line": 25,
+            "severity": "medium",
+            "category": "maintainability",
+            "description": "Migration callback parameters typed as 'any' lose type safety (duplicate issue)",
+            "suggestion": "Define proper types for migration callbacks or import the type from neverchange library: 'up: async (db: NeverChangeDB) => { ... }'"
+          },
+          {
+            "line": 36,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Function accesses module-level 'db' without checking if it's initialized, risking null reference errors",
+            "suggestion": "Add null check: 'if (!db) throw new Error(\"Database not initialized. Call initDb() first.\");' at the start of the function."
+          },
+          {
+            "line": 38,
+            "severity": "medium",
+            "category": "maintainability",
+            "description": "Inconsistent error handling - error is caught and logged but not propagated to caller",
+            "suggestion": "Either remove try-catch to let errors propagate, or re-throw after logging: 'catch (error) { console.error(\"Failed to add todo:\", error); throw error; }'"
+          },
+          {
+            "line": 44,
+            "severity": "info",
+            "category": "maintainability",
+            "description": "Console.log statement left in production code - should use proper logging framework",
+            "suggestion": "Replace console.log with a proper logger or remove debug statements from production code. Consider using a logging library with log levels."
+          },
+          {
+            "line": 50,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Function accesses module-level 'db' without null check, missing error handling for database query",
+            "suggestion": "Add null check and try-catch: 'if (!db) throw new Error(\"Database not initialized\"); try { const rows = await db.query(...); return rows || []; } catch (error) { console.error(error); throw error; }'"
+          },
+          {
+            "line": 55,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Function accesses module-level 'db' without null check and has no error handling",
+            "suggestion": "Add null check and wrap in try-catch: 'if (!db) throw new Error(\"Database not initialized\"); try { await db.execute(...); } catch (error) { console.error(\"Failed to toggle todo:\", error); throw error; }'"
+          },
+          {
+            "line": 61,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Function accesses module-level 'db' without null check",
+            "suggestion": "Add null check at start: 'if (!db) throw new Error(\"Database not initialized. Call initDb() first.\");'"
+          },
+          {
+            "line": 70,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Function accesses module-level 'db' without null check",
+            "suggestion": "Add null check at start: 'if (!db) throw new Error(\"Database not initialized. Call initDb() first.\");'"
+          },
+          {
+            "line": 50,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Using 'SELECT *' retrieves all columns even if not needed, potentially inefficient",
+            "suggestion": "Explicitly list only needed columns: 'SELECT id, text, completed FROM todos WHERE deleted = 0 ORDER BY id DESC' for better performance and clarity."
+          },
+          {
+            "line": 51,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "Fallback to empty array '|| []' may mask database errors if query returns null/undefined unexpectedly",
+            "suggestion": "Handle null case explicitly or ensure the query library always returns an array. Consider: 'return Array.isArray(rows) ? rows : [];'"
+          },
+          {
+            "line": 6,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "initDb() is not idempotent - calling it multiple times could cause issues with migration re-execution",
+            "suggestion": "Implement proper singleton pattern: 'if (db) return db;' at the start, or use a Promise to ensure only one initialization occurs even with concurrent calls."
+          },
+          {
+            "line": 65,
+            "severity": "info",
+            "category": "maintainability",
+            "description": "Console.log statement left in production code",
+            "suggestion": "Replace with proper logging framework or remove from production builds."
+          },
+          {
+            "line": 76,
+            "severity": "info",
+            "category": "maintainability",
+            "description": "Console.log statement left in production code",
+            "suggestion": "Replace with proper logging framework or remove from production builds."
+          },
+          {
+            "line": 3,
+            "severity": "medium",
+            "category": "security",
+            "description": "Global mutable database state could be accessed/modified by any module, creating potential security and race condition issues",
+            "suggestion": "Encapsulate db in a closure or class to control access. Export only necessary functions, not the db instance directly."
+          },
+          {
+            "line": 36,
+            "severity": "low",
+            "category": "security",
+            "description": "No input validation on 'text' parameter - could allow empty strings or excessively long text",
+            "suggestion": "Add validation: 'if (!text || text.trim().length === 0) throw new Error(\"Todo text cannot be empty\"); if (text.length > 500) throw new Error(\"Todo text too long\");'"
+          },
+          {
+            "line": 55,
+            "severity": "medium",
+            "category": "security",
+            "description": "No validation that 'id' is a positive integer - could accept negative numbers or invalid values",
+            "suggestion": "Add validation: 'if (!Number.isInteger(id) || id <= 0) throw new Error(\"Invalid todo ID\");'"
+          },
+          {
+            "line": 61,
+            "severity": "low",
+            "category": "security",
+            "description": "No validation on input parameters - both id and text should be validated",
+            "suggestion": "Add validation for both parameters: check id is positive integer and text is non-empty with reasonable length limits."
+          },
+          {
+            "line": 70,
+            "severity": "medium",
+            "category": "security",
+            "description": "No validation that 'id' is a positive integer",
+            "suggestion": "Add validation: 'if (!Number.isInteger(id) || id <= 0) throw new Error(\"Invalid todo ID\");'"
+          },
+          {
+            "line": 38,
+            "severity": "info",
+            "category": "style",
+            "description": "Inconsistent indentation - array parameter on separate line without clear formatting pattern",
+            "suggestion": "Keep parameters on same line for consistency: 'await db.execute(\"INSERT INTO todos (text) VALUES (?)\", [text]);'"
+          },
+          {
+            "line": 57,
+            "severity": "info",
+            "category": "style",
+            "description": "Inconsistent array bracket placement - opening bracket on different line than function call",
+            "suggestion": "Place array on same line: 'await db.execute(\"UPDATE todos SET completed = NOT completed WHERE id = ?\", [id]);'"
+          }
+        ],
+        "overallScore": 42,
+        "summary": "This database layer has significant quality issues that need addressing. CRITICAL CONCERNS: (1) Line 7 has a broken null check that allows re-initialization, creating potential race conditions and data corruption. (2) All database functions except initDb() lack null checks on the 'db' instance, risking runtime null reference errors. (3) Type safety is completely disabled via @ts-ignore and 'any' types throughout. SECURITY: Missing input validation on all functions could allow invalid data. No protection against empty strings, negative IDs, or excessively long text. MAINTAINABILITY: Inconsistent error handling - some functions swallow errors while others propagate them. Console.log statements in production code. Module-level mutable state makes testing difficult. PERFORMANCE: SELECT * queries are inefficient. The code uses parameterized queries correctly (preventing SQL injection), but needs proper TypeScript types, comprehensive null checks, input validation, consistent error handling, and removal of debug logging before production use."
+      },
+      "testCoverage": {
+        "file": "src/db.ts",
+        "hasTests": false,
+        "testFiles": [],
+        "untestedPaths": [
+          {
+            "type": "function",
+            "location": "initDb() - database initialization",
+            "priority": "critical",
+            "reasoning": "Database initialization is critical infrastructure. Failure here breaks the entire application. Must verify schema creation, proper error handling, and idempotency.",
+            "suggestedTest": "should initialize database schema successfully on first run and should be idempotent when called multiple times"
+          },
+          {
+            "type": "edge-case",
+            "location": "initDb() - database initialization failure",
+            "priority": "critical",
+            "reasoning": "If database initialization fails, the application should handle it gracefully rather than crashing silently.",
+            "suggestedTest": "should throw descriptive error when database connection fails or filesystem permissions are denied"
+          },
+          {
+            "type": "function",
+            "location": "addTodo() - creating new todo items",
+            "priority": "high",
+            "reasoning": "Core business logic for creating todos. Must validate that todos are properly persisted with correct structure.",
+            "suggestedTest": "should insert todo with text and return new todo object with id, text, completed=false, and createdAt timestamp"
+          },
+          {
+            "type": "edge-case",
+            "location": "addTodo() - empty or null text",
+            "priority": "high",
+            "reasoning": "Users might accidentally submit empty todos. Should validate input or handle gracefully.",
+            "suggestedTest": "should reject empty string, null, or undefined text with validation error"
+          },
+          {
+            "type": "edge-case",
+            "location": "addTodo() - SQL injection attempt",
+            "priority": "critical",
+            "reasoning": "Security vulnerability if user input not properly sanitized. Database layer must use parameterized queries.",
+            "suggestedTest": "should safely handle text containing SQL special characters like quotes, semicolons without executing malicious SQL"
+          },
+          {
+            "type": "edge-case",
+            "location": "addTodo() - extremely long text",
+            "priority": "medium",
+            "reasoning": "Edge case for boundary testing. Should either accept or reject with clear error.",
+            "suggestedTest": "should handle or reject todo text exceeding 10000 characters with appropriate error message"
+          },
+          {
+            "type": "function",
+            "location": "getTodos() - retrieving all todos",
+            "priority": "high",
+            "reasoning": "Primary read operation. Must verify correct data retrieval and structure.",
+            "suggestedTest": "should return array of all todos ordered by createdAt descending with id, text, completed, createdAt fields"
+          },
+          {
+            "type": "edge-case",
+            "location": "getTodos() - empty database",
+            "priority": "high",
+            "reasoning": "Common scenario on first use. Must return empty array rather than null or throwing error.",
+            "suggestedTest": "should return empty array when no todos exist in database"
+          },
+          {
+            "type": "branch",
+            "location": "getTodos() - database read error",
+            "priority": "high",
+            "reasoning": "Database might be locked or corrupted. Should handle read failures gracefully.",
+            "suggestedTest": "should throw descriptive error when database read fails or is locked"
+          },
+          {
+            "type": "function",
+            "location": "toggleTodo() - updating completion status",
+            "priority": "high",
+            "reasoning": "Core functionality for marking todos complete/incomplete. Must verify state changes persist.",
+            "suggestedTest": "should toggle completed from false to true and true to false, returning updated todo"
+          },
+          {
+            "type": "edge-case",
+            "location": "toggleTodo() - non-existent id",
+            "priority": "high",
+            "reasoning": "User might attempt to toggle deleted or invalid todo. Should handle gracefully.",
+            "suggestedTest": "should return null or throw NotFoundError when toggling todo with id that doesn't exist"
+          },
+          {
+            "type": "edge-case",
+            "location": "toggleTodo() - invalid id type",
+            "priority": "medium",
+            "reasoning": "API might receive malformed id parameter. Should validate type.",
+            "suggestedTest": "should reject null, undefined, negative, or non-numeric id with validation error"
+          },
+          {
+            "type": "function",
+            "location": "updateTodo() - modifying todo text",
+            "priority": "high",
+            "reasoning": "Allows users to edit todos. Must verify updates persist correctly.",
+            "suggestedTest": "should update todo text and return updated todo while preserving id, completed status, and createdAt"
+          },
+          {
+            "type": "edge-case",
+            "location": "updateTodo() - non-existent id",
+            "priority": "high",
+            "reasoning": "User might try to update deleted todo. Should handle gracefully.",
+            "suggestedTest": "should return null or throw NotFoundError when updating todo with id that doesn't exist"
+          },
+          {
+            "type": "edge-case",
+            "location": "updateTodo() - empty text",
+            "priority": "medium",
+            "reasoning": "User might clear todo text during edit. Should validate or handle appropriately.",
+            "suggestedTest": "should reject update with empty string, null, or undefined text"
+          },
+          {
+            "type": "edge-case",
+            "location": "updateTodo() - SQL injection in update",
+            "priority": "critical",
+            "reasoning": "Security vulnerability if update text not parameterized properly.",
+            "suggestedTest": "should safely handle update text containing SQL special characters without executing malicious SQL"
+          },
+          {
+            "type": "function",
+            "location": "deleteTodo() - removing todo",
+            "priority": "high",
+            "reasoning": "Permanent data deletion. Must verify todos are actually removed.",
+            "suggestedTest": "should delete todo by id and verify it no longer appears in getTodos() results"
+          },
+          {
+            "type": "edge-case",
+            "location": "deleteTodo() - non-existent id",
+            "priority": "medium",
+            "reasoning": "Double-delete or deleting invalid id should be handled gracefully.",
+            "suggestedTest": "should return false or succeed silently when deleting todo with id that doesn't exist"
+          },
+          {
+            "type": "edge-case",
+            "location": "deleteTodo() - invalid id type",
+            "priority": "medium",
+            "reasoning": "API might receive malformed id parameter. Should validate type.",
+            "suggestedTest": "should reject null, undefined, negative, or non-numeric id with validation error"
+          },
+          {
+            "type": "branch",
+            "location": "All functions - database connection closed",
+            "priority": "high",
+            "reasoning": "OPFS SQLite connection might be closed or unavailable. All operations should handle this.",
+            "suggestedTest": "should throw DatabaseConnectionError when attempting operations on closed database connection"
+          },
+          {
+            "type": "edge-case",
+            "location": "All functions - concurrent operations",
+            "priority": "medium",
+            "reasoning": "SQLite has locking behavior. Should verify proper handling of concurrent reads/writes.",
+            "suggestedTest": "should handle multiple concurrent addTodo() calls without data corruption or deadlocks"
+          },
+          {
+            "type": "edge-case",
+            "location": "All functions - transaction rollback",
+            "priority": "medium",
+            "reasoning": "If using transactions, failures should rollback properly without leaving partial state.",
+            "suggestedTest": "should rollback transaction and maintain database consistency when operation fails mid-transaction"
+          }
+        ],
+        "coverageEstimate": 0,
+        "summary": "src/db.ts has zero test coverage. This is a critical database layer file with 6 core functions handling data persistence for a todo application. All functions lack tests, including critical paths like database initialization, data validation, error handling, and security concerns (SQL injection). The absence of tests for edge cases like empty inputs, non-existent IDs, database connection failures, and concurrent operations poses significant risk. Priority should be: 1) Security tests (SQL injection in addTodo/updateTodo), 2) Database initialization and connection handling, 3) CRUD operation happy paths, 4) Edge cases for invalid inputs and non-existent records, 5) Concurrency and transaction handling. Recommend creating src/db.test.ts with at minimum 22 test cases covering the suggested scenarios above."
+      },
+      "refactorings": {
+        "file": "src/db.ts",
+        "suggestions": [
+          {
+            "type": "simplify",
+            "location": "initDb function, line 7",
+            "impact": "low",
+            "description": "Remove no-op statement 'if(db) db;' that has no effect",
+            "before": "export async function initDb() {\n  if(db) db;\n\n  db = new NeverChangeDB(DB_NAME);",
+            "after": "export async function initDb() {\n  if(db) return;\n\n  db = new NeverChangeDB(DB_NAME);",
+            "benefits": "The original statement 'if(db) db;' is a no-op that likely intended to be an early return. This fixes the logic to prevent re-initialization and makes the intent clear."
+          },
+          {
+            "type": "modernize",
+            "location": "Top-level db variable and all function signatures",
+            "impact": "high",
+            "description": "Replace 'any' types with proper TypeScript interfaces and eliminate global mutable state",
+            "before": "let db: any = null;\nconst DB_NAME = 'todo';\nexport async function initDb() {\n  if(db) return;\n  db = new NeverChangeDB(DB_NAME);",
+            "after": "import { NeverChangeDB } from 'neverchange';\n\ninterface Todo {\n  id: number;\n  text: string;\n  completed: boolean;\n  deleted: boolean;\n}\n\ntype NeverChangeDBInstance = ReturnType<typeof NeverChangeDB>;\n\nconst DB_NAME = 'todo';\nlet dbInstance: NeverChangeDBInstance | null = null;\n\nexport async function initDb(): Promise<void> {\n  if (dbInstance) return;\n  dbInstance = new NeverChangeDB(DB_NAME);",
+            "benefits": "Eliminates 'any' types for type safety, adds proper interfaces for domain models, and uses more descriptive variable naming. This prevents type-related bugs and improves IDE autocomplete."
+          },
+          {
+            "type": "extract-function",
+            "location": "initDb function, migration definitions",
+            "impact": "medium",
+            "description": "Extract migration definitions into a separate constant to separate configuration from initialization logic",
+            "before": "export async function initDb() {\n  if(db) return;\n  db = new NeverChangeDB(DB_NAME);\n\n  db.addMigrations([\n    {\n      version: 1,\n      up: async (db: any) => {\n        await db.execute(`\n          CREATE TABLE IF NOT EXISTS todos (...)\n        `);\n      },\n    },\n    {\n      version: 2,\n      up: async (db: any) => {\n        await db.execute(`\n          ALTER TABLE todos ADD COLUMN deleted ...\n        `);\n      },\n    },\n  ]);\n  await db.init();\n}",
+            "after": "const MIGRATIONS = [\n  {\n    version: 1,\n    up: async (db: NeverChangeDBInstance) => {\n      await db.execute(`\n        CREATE TABLE IF NOT EXISTS todos (\n          id INTEGER PRIMARY KEY AUTOINCREMENT,\n          text TEXT NOT NULL,\n          completed BOOLEAN NOT NULL DEFAULT 0\n        )\n      `);\n    },\n  },\n  {\n    version: 2,\n    up: async (db: NeverChangeDBInstance) => {\n      await db.execute(`\n        ALTER TABLE todos ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT 0\n      `);\n    },\n  },\n];\n\nexport async function initDb(): Promise<void> {\n  if (dbInstance) return;\n  dbInstance = new NeverChangeDB(DB_NAME);\n  dbInstance.addMigrations(MIGRATIONS);\n  await dbInstance.init();\n}",
+            "benefits": "Separates data/configuration from logic, making migrations easier to test, maintain, and locate. Reduces function complexity and improves readability."
+          },
+          {
+            "type": "pattern-improvement",
+            "location": "All database operation functions",
+            "impact": "high",
+            "description": "Introduce a database instance getter pattern to ensure db is initialized and provide better error handling",
+            "before": "export async function addTodo(text: string) {\n  try {\n    await db.execute(\n      'INSERT INTO todos (text) VALUES (?)',\n    [text],\n    );\n    console.log('Todo added successfully'); \n  } catch (error) {\n    console.error('Failed to add todo:', error);\n  }\n}",
+            "after": "function getDb(): NeverChangeDBInstance {\n  if (!dbInstance) {\n    throw new Error('Database not initialized. Call initDb() first.');\n  }\n  return dbInstance;\n}\n\nexport async function addTodo(text: string): Promise<void> {\n  const db = getDb();\n  await db.execute(\n    'INSERT INTO todos (text) VALUES (?)',\n    [text]\n  );\n}",
+            "benefits": "Ensures database is initialized before use, provides clear error messages, eliminates silent failures from accessing null db, and removes console.log statements that should be handled by caller."
+          },
+          {
+            "type": "simplify",
+            "location": "addTodo, updateTodo, deleteTodo functions",
+            "impact": "medium",
+            "description": "Remove inconsistent try-catch blocks and console.log statements, let errors bubble up",
+            "before": "export async function addTodo(text: string) {\n  try {\n    await db.execute(\n      'INSERT INTO todos (text) VALUES (?)',\n    [text],\n    );\n    console.log('Todo added successfully'); \n  } catch (error) {\n    console.error('Failed to add todo:', error);\n  }\n}",
+            "after": "export async function addTodo(text: string): Promise<void> {\n  const db = getDb();\n  await db.execute(\n    'INSERT INTO todos (text) VALUES (?)',\n    [text]\n  );\n}",
+            "benefits": "Consistent error handling across all functions. Errors propagate to callers who can handle them appropriately. Removes logging that mixes concerns - logging should be done at application boundary, not data layer."
+          },
+          {
+            "type": "modernize",
+            "location": "getTodos function",
+            "impact": "medium",
+            "description": "Add proper return type and simplify null coalescing",
+            "before": "export async function getTodos() {\n  const rows = await db.query('SELECT * FROM todos WHERE deleted = 0 ORDER BY id DESC');\n  return rows || [];\n}",
+            "after": "export async function getTodos(): Promise<Todo[]> {\n  const db = getDb();\n  const rows = await db.query<Todo>('SELECT * FROM todos WHERE deleted = 0 ORDER BY id DESC');\n  return rows ?? [];\n}",
+            "benefits": "Uses nullish coalescing operator (??), adds type safety with proper return type, and ensures the function returns typed Todo objects for better type checking in consuming code."
+          },
+          {
+            "type": "simplify",
+            "location": "All query/execute calls",
+            "impact": "low",
+            "description": "Standardize formatting of SQL parameters across all functions",
+            "before": "await db.execute(\n  'INSERT INTO todos (text) VALUES (?)',\n[text],\n);",
+            "after": "await db.execute(\n  'INSERT INTO todos (text) VALUES (?)',\n  [text]\n);",
+            "benefits": "Consistent code formatting makes the codebase easier to read and maintain. Parameters array should be at the same indentation level as the query string."
+          },
+          {
+            "type": "extract-function",
+            "location": "SQL query strings throughout the file",
+            "impact": "medium",
+            "description": "Extract SQL queries into named constants for reusability and maintainability",
+            "before": "export async function getTodos() {\n  const rows = await db.query('SELECT * FROM todos WHERE deleted = 0 ORDER BY id DESC');\n  return rows || [];\n}\n\nexport async function toggleTodo(id: number) {\n  await db.execute(\n    'UPDATE todos SET completed = NOT completed WHERE id = ?',\n    [id]);\n}",
+            "after": "const SQL_QUERIES = {\n  GET_ACTIVE_TODOS: 'SELECT * FROM todos WHERE deleted = 0 ORDER BY id DESC',\n  INSERT_TODO: 'INSERT INTO todos (text) VALUES (?)',\n  TOGGLE_TODO: 'UPDATE todos SET completed = NOT completed WHERE id = ?',\n  UPDATE_TODO_TEXT: 'UPDATE todos SET text = ? WHERE id = ?',\n  SOFT_DELETE_TODO: 'UPDATE todos SET deleted = 1 WHERE id = ?',\n} as const;\n\nexport async function getTodos(): Promise<Todo[]> {\n  const db = getDb();\n  const rows = await db.query<Todo>(SQL_QUERIES.GET_ACTIVE_TODOS);\n  return rows ?? [];\n}\n\nexport async function toggleTodo(id: number): Promise<void> {\n  const db = getDb();\n  await db.execute(SQL_QUERIES.TOGGLE_TODO, [id]);\n}",
+            "benefits": "Centralizes SQL queries making them easier to review, test, and modify. Prevents typos in duplicated queries, improves searchability, and makes SQL injection vulnerabilities easier to audit."
+          },
+          {
+            "type": "modernize",
+            "location": "Top of file, @ts-ignore comment",
+            "impact": "medium",
+            "description": "Replace @ts-ignore with proper type declarations or @ts-expect-error with explanation",
+            "before": "// @ts-ignore\nimport { NeverChangeDB } from 'neverchange';",
+            "after": "import { NeverChangeDB } from 'neverchange';\n\n// If neverchange lacks type definitions, create them:\n// Create a neverchange.d.ts file with proper types, or use:\n// @ts-expect-error - neverchange library lacks TypeScript definitions",
+            "benefits": "@ts-ignore suppresses all errors silently. @ts-expect-error is safer as it errors if the ignore becomes unnecessary. Best solution is to add proper type definitions for the library."
+          },
+          {
+            "type": "pattern-improvement",
+            "location": "Entire module structure",
+            "impact": "high",
+            "description": "Introduce a TodoRepository class to encapsulate database operations and state",
+            "before": "let db: any = null;\nexport async function initDb() { ... }\nexport async function addTodo(text: string) { ... }\nexport async function getTodos() { ... }",
+            "after": "export class TodoRepository {\n  private db: NeverChangeDBInstance | null = null;\n  private readonly dbName: string;\n\n  constructor(dbName: string = 'todo') {\n    this.dbName = dbName;\n  }\n\n  async init(): Promise<void> {\n    if (this.db) return;\n    this.db = new NeverChangeDB(this.dbName);\n    this.db.addMigrations(MIGRATIONS);\n    await this.db.init();\n  }\n\n  private getDb(): NeverChangeDBInstance {\n    if (!this.db) {\n      throw new Error('Database not initialized. Call init() first.');\n    }\n    return this.db;\n  }\n\n  async addTodo(text: string): Promise<void> {\n    await this.getDb().execute(SQL_QUERIES.INSERT_TODO, [text]);\n  }\n\n  async getTodos(): Promise<Todo[]> {\n    const rows = await this.getDb().query<Todo>(SQL_QUERIES.GET_ACTIVE_TODOS);\n    return rows ?? [];\n  }\n  // ... other methods\n}\n\n// Export singleton instance for convenience\nexport const todoRepository = new TodoRepository();",
+            "benefits": "Eliminates global mutable state, makes testing easier with dependency injection, allows multiple database instances if needed, improves encapsulation, and makes the API more object-oriented and maintainable."
+          }
+        ],
+        "summary": "The db.ts file has significant refactoring opportunities despite its recent migration to neverchange. Key issues include: (1) heavy use of 'any' types eliminating TypeScript benefits, (2) global mutable state making testing difficult, (3) inconsistent error handling with some functions swallowing errors, (4) a no-op bug in initDb that should be an early return, (5) mixing of concerns with console.log statements in data layer, and (6) lack of SQL query centralization. The highest-impact improvements would be: replacing 'any' types with proper interfaces (prevents bugs), introducing a repository class pattern (eliminates global state, improves testability), and implementing a database getter pattern (ensures initialization). Medium-priority improvements include extracting SQL queries to constants (maintainability) and removing inconsistent try-catch blocks (consistent error handling). These changes would transform the code from a procedural module with weak typing into a well-typed, testable, object-oriented data access layer."
+      }
+    }
+  ],
+  "summary": {
+    "totalFiles": 1,
+    "overallScore": 42,
+    "criticalIssues": 0,
+    "highPriorityTests": 11,
+    "refactoringOpportunities": 10
+  },
+  "recommendations": [
+    {
+      "priority": "critical",
+      "category": "Bug Risk",
+      "description": "Line 7 contains a no-op statement 'if(db) db;' that has no effect, allowing the database to be re-initialized multiple times. This can cause race conditions, data corruption, and migration re-execution issues. Add 'return;' after the if condition to prevent re-initialization.",
+      "files": [
+        "src/db.ts"
+      ]
+    },
+    {
+      "priority": "critical",
+      "category": "Security & Testing",
+      "description": "No tests exist for SQL injection protection in addTodo() and updateTodo() functions. While the code uses parameterized queries (which is correct), this critical security guarantee must be verified with tests to ensure text containing SQL special characters like quotes and semicolons cannot execute malicious SQL.",
+      "files": [
+        "src/db.ts"
+      ]
+    },
+    {
+      "priority": "critical",
+      "category": "Testing",
+      "description": "Database initialization (initDb) has zero test coverage despite being critical infrastructure. Failure here breaks the entire application. Must verify schema creation succeeds, error handling works, and the function is idempotent when called multiple times. Add tests before production use.",
+      "files": [
+        "src/db.ts"
+      ]
+    },
+    {
+      "priority": "high",
+      "category": "Bug Risk",
+      "description": "All database operation functions (addTodo, getTodos, toggleTodo, updateTodo, deleteTodo) access the module-level 'db' variable without checking if it's null, risking runtime null reference errors if initDb() wasn't called first. Add null checks or implement a getDb() helper function that throws a clear error.",
+      "files": [
+        "src/db.ts"
+      ]
+    },
+    {
+      "priority": "high",
+      "category": "Type Safety & Maintainability",
+      "description": "The @ts-ignore directive at line 1 and 'any' types throughout (lines 3, 13, 25) eliminate TypeScript's type safety benefits. This masks potential type errors and removes IDE autocomplete. Replace 'any' with proper types/interfaces for NeverChangeDB, define a Todo interface, and add proper return types to all functions.",
+      "files": [
+        "src/db.ts"
+      ]
+    }
+  ],
+  "metadata": {
+    "analyzedAt": "2026-09-27T00:00:00.000Z",
+    "duration": 297877,
+    "agentVersions": {
+      "codeQuality": "1.0",
+      "testCoverage": "1.0",
+      "refactoring": "1.0"
+    }
+  }
+}

@@ -1,0 +1,535 @@
+{
+  "pullRequest": {
+    "owner": "lucaong",
+    "repo": "minisearch",
+    "number": 295
+  },
+  "fileReviews": [
+    {
+      "file": "src/MiniSearch.ts",
+      "codeQuality": {
+        "file": "/tmp/MiniSearch.ts",
+        "issues": [
+          {
+            "line": 2041,
+            "severity": "medium",
+            "category": "best-practice",
+            "description": "Direct use of Object.prototype.hasOwnProperty.call() could be replaced with Object.hasOwn() (ES2022+)",
+            "suggestion": "Replace `Object.prototype.hasOwnProperty.call(object, property)` with `Object.hasOwn(object, property)` for cleaner, more modern code if targeting ES2022+ environments."
+          },
+          {
+            "line": 1544,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "Using deprecated hasOwnProperty check on defaultOptions object",
+            "suggestion": "Use Object.hasOwn(defaultOptions, optionName) instead of defaultOptions.hasOwnProperty(optionName) for better clarity and to avoid potential issues with prototype manipulation."
+          },
+          {
+            "line": 869,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "Checking arguments.length without proper TypeScript support; arguments object is discouraged",
+            "suggestion": "Consider refactoring to use proper function overloading or explicit parameters. The `arguments` object is not type-safe and harder to reason about."
+          },
+          {
+            "line": 938,
+            "severity": "low",
+            "category": "style",
+            "description": "Unnecessary semicolon at start of statement (void operator pattern)",
+            "suggestion": "Remove the leading semicolon before the IIFE pattern `(this._fieldLength.get(shortId) || [])` or refactor to a clearer multi-line statement."
+          },
+          {
+            "line": 1110,
+            "severity": "info",
+            "category": "best-practice",
+            "description": "Using `await null` as a way to defer execution is non-standard",
+            "suggestion": "Use `await Promise.resolve()` or `await new Promise(resolve => setTimeout(resolve, 0))` for clearer intent about deferring execution to the next tick."
+          },
+          {
+            "line": 789,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Using setTimeout with 0ms delay in a loop creates many timer objects",
+            "suggestion": "Consider using setImmediate (Node.js) or a single requestIdleCallback (browser) for better performance. Alternatively, batch the setTimeout calls more efficiently."
+          },
+          {
+            "line": 1100,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Using setTimeout inside a potentially large loop during vacuuming",
+            "suggestion": "This pattern is acceptable for batching but ensure batchSize and batchWait are tuned appropriately. Consider using requestIdleCallback in browser environments for better scheduling."
+          },
+          {
+            "line": 671,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "Optional chaining could simplify the null check: options?.fields == null",
+            "suggestion": "The current code is fine, but be consistent with null checking patterns throughout the codebase. Consider using `options?.fields == null` for consistency with modern patterns."
+          },
+          {
+            "line": 1148,
+            "severity": "info",
+            "category": "performance",
+            "description": "Division operation in frequently called getter method",
+            "suggestion": "The dirtFactor calculation is simple, but if this getter is called very frequently in hot paths, consider caching the value and invalidating on changes."
+          },
+          {
+            "line": 2192,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Using array.includes() in a loop for duplicate detection is O(n²)",
+            "suggestion": "Consider using a Set for tracking unique terms instead of repeated array.includes() calls, which would reduce complexity from O(n²) to O(n)."
+          },
+          {
+            "line": 2198,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Using array.includes() in a loop for duplicate detection is O(n²)",
+            "suggestion": "Consider using a Set for tracking unique terms instead of repeated array.includes() calls in assignUniqueTerms function."
+          },
+          {
+            "line": 1685,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "Using flatMap followed by filter when the operation could be combined",
+            "suggestion": "While readable, this creates intermediate arrays. For performance-critical code, consider using reduce or a for-loop to combine the operations."
+          },
+          {
+            "line": 2164,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "Optional chaining with unsafe property access pattern",
+            "suggestion": "The pattern `console?.[level]` is good, but ensure all log levels are actually valid console methods to avoid silent failures."
+          },
+          {
+            "line": 1095,
+            "severity": "low",
+            "category": "bug-risk",
+            "description": "Non-null assertion operator (!) used without guaranteed safety",
+            "suggestion": "Line uses `this._index.get(term)!` which assumes the term exists. While the logic seems safe here, add a guard check or comment explaining why this is guaranteed to be non-null."
+          },
+          {
+            "line": 204,
+            "severity": "info",
+            "category": "maintainability",
+            "description": "Generic type defaults to 'any' which loses type safety",
+            "suggestion": "While this provides flexibility, document that users should provide specific types for better type safety: `new MiniSearch<DocumentType>({...})`"
+          },
+          {
+            "line": 740,
+            "severity": "low",
+            "category": "bug-risk",
+            "description": "Calling toString() on fieldValue without null check",
+            "suggestion": "While fieldValue is checked for null on line 738, ensure that toString() method exists and won't throw. Consider using String(fieldValue) for safer conversion."
+          },
+          {
+            "line": 832,
+            "severity": "low",
+            "category": "bug-risk",
+            "description": "Calling toString() on fieldValue without comprehensive type checking",
+            "suggestion": "Similar to line 740, consider using String(fieldValue) for more predictable behavior across different types."
+          },
+          {
+            "line": 783,
+            "severity": "medium",
+            "category": "maintainability",
+            "description": "Complex reducer logic with mutation of accumulator object makes it harder to understand",
+            "suggestion": "Consider extracting the reducer function into a named function with a clear signature for better readability and testability."
+          },
+          {
+            "line": 1676,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "Object spread with queries: undefined could be cleaner",
+            "suggestion": "Instead of `{ ...query, queries: undefined }`, consider using object destructuring to omit queries: `const { queries, ...options } = { ...searchOptions, ...query }`"
+          },
+          {
+            "line": 1972,
+            "severity": "low",
+            "category": "performance",
+            "description": "Linear search through field IDs on every warning",
+            "suggestion": "Consider maintaining a reverse mapping from fieldId to fieldName to avoid O(n) lookup, especially if this warning occurs frequently."
+          },
+          {
+            "line": 2215,
+            "severity": "low",
+            "category": "performance",
+            "description": "Using Object.keys() before iteration creates intermediate array",
+            "suggestion": "Consider using for...in with hasOwnProperty check or Object.entries() if both key and value are needed for slightly better performance."
+          },
+          {
+            "line": 2225,
+            "severity": "low",
+            "category": "performance",
+            "description": "Using Object.keys() creates intermediate array in async function",
+            "suggestion": "Consider using for...in with hasOwnProperty check to avoid creating the intermediate array."
+          },
+          {
+            "line": 1057,
+            "severity": "low",
+            "category": "maintainability",
+            "description": "Complex conditional logic with multiple null checks and assignments",
+            "suggestion": "The conditionalVacuum method has complex branching. Consider extracting sub-conditions into well-named helper methods for clarity."
+          },
+          {
+            "line": 1786,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "toLowerCase() called on user input without validation",
+            "suggestion": "Ensure combineWith is validated as a string before calling toLowerCase(). Add explicit type checking or validation to prevent runtime errors if an unexpected type is passed."
+          }
+        ],
+        "overallScore": 82,
+        "summary": "The MiniSearch.ts file is a well-structured, production-quality TypeScript implementation of a full-text search engine. The code demonstrates good software engineering practices with comprehensive documentation, proper type definitions, and thoughtful API design. However, there are several areas for improvement: (1) Performance optimizations needed in duplicate term detection (lines 2192, 2198) which currently use O(n²) array.includes() instead of Set-based approaches; (2) Modernization opportunities such as using Object.hasOwn() instead of hasOwnProperty patterns; (3) Minor type safety concerns with non-null assertions and any types; (4) Some complex methods (conditionalVacuum, addAllAsync reducer) could benefit from refactoring for clarity. No critical security vulnerabilities were identified, though input validation on combineWith parameter could be strengthened. The code is maintainable overall but would benefit from extracting some complex logic into smaller, well-named helper functions."
+      },
+      "testCoverage": {
+        "file": "/tmp/MiniSearch.ts",
+        "hasTests": false,
+        "testFiles": [],
+        "untestedPaths": [
+          {
+            "type": "edge-case",
+            "location": "constructor (line 670-715)",
+            "priority": "critical",
+            "reasoning": "Constructor validates that fields option is provided but lacks tests for null/undefined options parameter, invalid autoVacuum configurations, and field name edge cases (empty array, duplicate field names)",
+            "suggestedTest": "should throw when options is null or undefined; should throw when fields is empty array; should handle duplicate field names gracefully; should properly initialize with all autoVacuum option combinations (true, false, custom object)"
+          },
+          {
+            "type": "edge-case",
+            "location": "add method (line 722-757)",
+            "priority": "critical",
+            "reasoning": "Core indexing logic handles null ID and duplicate ID cases but lacks tests for documents with null/undefined field values, extremely long text fields, special characters in terms, and processTerm returning arrays vs strings vs falsy values",
+            "suggestedTest": "should handle document with all null field values; should handle document with undefined ID field; should correctly index when processTerm returns array of terms; should handle extremely large field values (>10000 chars); should handle special Unicode characters in field values"
+          },
+          {
+            "type": "edge-case",
+            "location": "addAllAsync method (line 779-798)",
+            "priority": "high",
+            "reasoning": "Async batch processing lacks tests for edge cases: empty document array, chunkSize of 0 or negative, chunkSize larger than document count, and error propagation during async processing",
+            "suggestedTest": "should handle empty documents array; should throw when chunkSize is 0 or negative; should complete successfully when chunkSize exceeds document count; should propagate errors from failed document additions"
+          },
+          {
+            "type": "edge-case",
+            "location": "remove method (line 814-855)",
+            "priority": "critical",
+            "reasoning": "Document removal is critical for data integrity. Missing tests for removing document that was already discarded, removing same document twice, and handling corrupted index state where term counts mismatch",
+            "suggestedTest": "should throw when removing non-existent document ID; should throw when removing document that was already discarded; should throw when attempting to remove same document twice; should handle gracefully when document has changed since indexing"
+          },
+          {
+            "type": "edge-case",
+            "location": "removeAll method with arguments (line 866-881)",
+            "priority": "medium",
+            "reasoning": "Line 869 checks for arguments.length > 0 with undefined documents parameter - this is an unusual error case that prevents passing explicit undefined",
+            "suggestedTest": "should throw error when called with explicit undefined as argument (removeAll(undefined))"
+          },
+          {
+            "type": "edge-case",
+            "location": "discard method (line 927-948)",
+            "priority": "high",
+            "reasoning": "Discard is key to memory management but lacks tests for: discarding when autoVacuum is disabled, discarding same ID twice, discarding during an ongoing vacuum operation",
+            "suggestedTest": "should throw when discarding non-existent document ID; should throw when discarding same document twice; should increment dirtCount correctly; should trigger autoVacuum when thresholds are met; should not trigger vacuum when autoVacuum is false"
+          },
+          {
+            "type": "function",
+            "location": "maybeAutoVacuum method (line 950-955)",
+            "priority": "high",
+            "reasoning": "Private method that controls automatic vacuuming has no direct tests verifying the conditions logic, especially edge cases around minDirtFactor and minDirtCount thresholds",
+            "suggestedTest": "should not trigger vacuum when dirtCount is below minDirtCount; should not trigger vacuum when dirtFactor is below minDirtFactor; should trigger when both thresholds are exceeded"
+          },
+          {
+            "type": "edge-case",
+            "location": "discardAll method (line 969-983)",
+            "priority": "medium",
+            "reasoning": "Temporarily disables autoVacuum with try-finally. Missing tests for: error during discard (does finally restore autoVacuum?), empty IDs array, very large IDs array",
+            "suggestedTest": "should restore autoVacuum setting even when discard throws error; should handle empty IDs array; should trigger at most one autoVacuum after processing 1000+ IDs"
+          },
+          {
+            "type": "edge-case",
+            "location": "replace method (line 1000-1006)",
+            "priority": "high",
+            "reasoning": "Replace combines discard and add but lacks tests for replacing with document having different ID, replacing non-existent document, and atomic failure scenarios",
+            "suggestedTest": "should throw when updatedDocument has different ID than existing; should throw when replacing non-existent document; should maintain index consistency if add fails after discard"
+          },
+          {
+            "type": "function",
+            "location": "vacuum method (line 1047-1049)",
+            "priority": "high",
+            "reasoning": "Manual vacuum triggering lacks tests for custom batchSize/batchWait values, calling vacuum multiple times in succession, vacuum during active search operations",
+            "suggestedTest": "should accept custom batchSize and batchWait options; should enqueue only one additional vacuum when called multiple times during active vacuum; should resolve promise when vacuuming completes; should handle batchSize of 1 for large indexes"
+          },
+          {
+            "type": "function",
+            "location": "conditionalVacuum method (line 1051-1072)",
+            "priority": "medium",
+            "reasoning": "Complex vacuum scheduling logic with currentVacuum and enqueuedVacuum states lacks comprehensive tests for race conditions and edge cases",
+            "suggestedTest": "should not enqueue more than one vacuum; should resolve immediately when conditions are not met; should properly sequence currentVacuum -> enqueuedVacuum transitions"
+          },
+          {
+            "type": "function",
+            "location": "performVacuuming method (line 1074-1114)",
+            "priority": "high",
+            "reasoning": "Core vacuuming implementation lacks tests for: vacuuming with no dirty documents, vacuuming very large indexes, proper cleanup of empty term entries, and batch timing verification",
+            "suggestedTest": "should remove all references to discarded documents; should delete terms with no remaining documents; should properly batch operations with specified batchSize; should update dirtCount correctly after vacuum"
+          },
+          {
+            "type": "edge-case",
+            "location": "search method with filter (line 1336-1372)",
+            "priority": "high",
+            "reasoning": "Filter function application lacks tests for: filter throwing errors, filter returning non-boolean, filter depending on stored fields that don't exist",
+            "suggestedTest": "should handle filter function that throws error; should treat non-boolean filter returns as falsy; should pass correct storedFields to filter function; should return empty array when filter rejects all results"
+          },
+          {
+            "type": "edge-case",
+            "location": "search with wildcard query (line 1366-1367, 1767-1781)",
+            "priority": "medium",
+            "reasoning": "Wildcard search bypasses normal scoring but lacks tests for: wildcard with boostDocument, wildcard with filter, wildcard on empty index, wildcard with stored fields",
+            "suggestedTest": "should return all documents when searching MiniSearch.wildcard; should apply boostDocument to wildcard results; should apply filter to wildcard results; should return empty array for wildcard on empty index"
+          },
+          {
+            "type": "edge-case",
+            "location": "search with query tree (line 1675-1679)",
+            "priority": "high",
+            "reasoning": "Complex query trees with nested AND/OR/AND_NOT combinators lack tests for: deeply nested queries (5+ levels), invalid combineWith operators, empty queries array, mismatched query structures",
+            "suggestedTest": "should handle deeply nested query trees (5+ levels); should throw on invalid combineWith operator; should handle query tree with empty queries array; should combine results correctly for complex AND/OR/AND_NOT trees"
+          },
+          {
+            "type": "edge-case",
+            "location": "search with prefix/fuzzy options (line 1720-1760)",
+            "priority": "high",
+            "reasoning": "Prefix and fuzzy search lack comprehensive edge case tests: fuzzy with value > 1, fuzzy with value between 0-1, prefix function returning non-boolean, extremely short terms (1 char) with fuzzy",
+            "suggestedTest": "should handle fuzzy: 0 (exact match only); should handle fuzzy: 1 (edit distance 1); should handle fuzzy: 0.5 on term 'ab' (should use distance 1); should limit fuzzy to maxFuzzy value; should handle prefix function returning non-boolean"
+          },
+          {
+            "type": "edge-case",
+            "location": "autoSuggest method (line 1435-1458)",
+            "priority": "medium",
+            "reasoning": "Auto-suggest aggregates search results but lacks tests for: empty query string, query with no results, duplicate terms in different documents, very high score values causing overflow",
+            "suggestedTest": "should return empty array for empty query string; should return empty array when no documents match; should aggregate scores correctly for same suggestion from multiple documents; should handle very large score values without overflow"
+          },
+          {
+            "type": "function",
+            "location": "loadJSON static method (line 1495-1500)",
+            "priority": "critical",
+            "reasoning": "Deserialization from JSON lacks tests for: malformed JSON, version mismatch, missing required fields, corrupted index data, null options parameter",
+            "suggestedTest": "should throw when options is null; should throw when JSON is malformed; should throw when serializationVersion is incompatible; should throw when required fields are missing from JSON"
+          },
+          {
+            "type": "function",
+            "location": "loadJSONAsync static method (line 1515-1520)",
+            "priority": "high",
+            "reasoning": "Async deserialization lacks tests for the same edge cases as loadJSON plus: very large indexes requiring multiple batches, memory pressure scenarios",
+            "suggestedTest": "should properly batch large index deserialization; should reject promise on malformed JSON; should reject when options is null"
+          },
+          {
+            "type": "edge-case",
+            "location": "loadJS/loadJSAsync version handling (line 1580-1582, 1623-1625)",
+            "priority": "medium",
+            "reasoning": "Serialization version 1 compatibility path (line 1581) lacks tests ensuring backward compatibility with older index formats",
+            "suggestedTest": "should correctly deserialize version 1 indexes with nested .ds field; should correctly deserialize version 2 indexes; should maintain data integrity across version migrations"
+          },
+          {
+            "type": "edge-case",
+            "location": "toJSON method (line 1822-1847)",
+            "priority": "medium",
+            "reasoning": "Serialization lacks tests for: very large indexes, indexes with special characters in terms, empty index, index with only discarded documents",
+            "suggestedTest": "should serialize empty index correctly; should include dirtCount in serialization; should set serializationVersion to 2; should handle terms with special Unicode characters"
+          },
+          {
+            "type": "branch",
+            "location": "termResults document boost (line 1882-1883)",
+            "priority": "high",
+            "reasoning": "boostDocument returning falsy (0, false, null, undefined) should skip result, but lacks tests for each falsy type and edge cases like negative boost values",
+            "suggestedTest": "should skip result when boostDocument returns 0; should skip when boostDocument returns false; should skip when boostDocument returns null; should accept negative boost values (reduce score)"
+          },
+          {
+            "type": "edge-case",
+            "location": "combineResults with invalid operator (line 1786-1796)",
+            "priority": "medium",
+            "reasoning": "Throws error for invalid combinator but lacks tests for: case sensitivity variations (and vs AND), typos, empty string operator",
+            "suggestedTest": "should throw 'Invalid combination operator' for unknown operator; should accept lowercase 'or', 'and', 'and_not'; should accept uppercase 'OR', 'AND', 'AND_NOT'; should accept capitalized 'Or', 'And'"
+          },
+          {
+            "type": "edge-case",
+            "location": "BM25 scoring with edge values (line 2129-2140)",
+            "priority": "medium",
+            "reasoning": "BM25 calculation lacks tests for edge cases: k=0 (invalid), b=0 (no length norm), d=0, very long documents (fieldLength >> avgFieldLength), all documents match (matchingCount == totalCount)",
+            "suggestedTest": "should handle b=0 (no length normalization); should handle d=0; should handle case where all documents match term; should handle very long field (10x average)"
+          },
+          {
+            "type": "function",
+            "location": "getDefault static method (line 1543-1549)",
+            "priority": "low",
+            "reasoning": "Utility method to get default options lacks tests for: valid option names, invalid option names, options that are functions vs primitives",
+            "suggestedTest": "should return default tokenize function; should return default processTerm function; should throw 'unknown option' for invalid option name"
+          },
+          {
+            "type": "edge-case",
+            "location": "has method (line 1157-1159)",
+            "priority": "low",
+            "reasoning": "Simple getter but lacks tests for: checking discarded document ID (should return false), checking ID of type different from indexed IDs (number vs string)",
+            "suggestedTest": "should return false for discarded document ID; should return false for never-indexed ID; should handle ID type mismatches (checking '1' when indexed as 1)"
+          },
+          {
+            "type": "edge-case",
+            "location": "getStoredFields method (line 1168-1174)",
+            "priority": "low",
+            "reasoning": "Returns undefined for non-existent IDs but lacks tests for: discarded documents, documents with no stored fields configured, partial stored fields",
+            "suggestedTest": "should return undefined for non-existent ID; should return undefined for discarded document; should return empty object when storeFields is empty array; should return only configured stored fields"
+          },
+          {
+            "type": "edge-case",
+            "location": "default tokenizer SPACE_OR_PUNCTUATION (line 2239)",
+            "priority": "medium",
+            "reasoning": "Regex-based tokenizer lacks tests for: Unicode spaces, various punctuation marks, mixed content, empty strings, strings with only spaces/punctuation",
+            "suggestedTest": "should split on Unicode spaces (non-breaking space, em space, etc.); should split on punctuation (periods, commas, semicolons); should return empty array for empty string; should handle mixed Unicode and ASCII content"
+          },
+          {
+            "type": "edge-case",
+            "location": "processTerm returning arrays (line 748-751, 840-843)",
+            "priority": "medium",
+            "reasoning": "When processTerm returns array of terms, each is indexed separately. Lacks tests for: empty array return, array with falsy values, array with duplicate terms",
+            "suggestedTest": "should index all terms when processTerm returns array; should skip falsy values in returned array; should handle empty array return (index nothing); should handle duplicate terms in returned array"
+          }
+        ],
+        "coverageEstimate": 0,
+        "summary": "The file /tmp/MiniSearch.ts is a comprehensive search library with zero test coverage. No test files were found. This 2240-line file implements a full-text search engine with critical functionality including document indexing, searching, auto-suggestions, serialization/deserialization, vacuuming, and complex query trees. Key critical untested paths include: constructor validation, document add/remove/discard operations (data integrity), search with filters and complex query trees, async operations (addAllAsync, vacuum batching, loadJSONAsync), serialization version compatibility, edge cases in BM25 scoring, and error handling throughout. The lack of tests for core indexing operations (add, remove, discard) and search functionality represents a critical business risk, as these are the primary API surface. Edge cases around null/undefined values, empty collections, concurrent operations (vacuum during search), and boundary conditions (maxFuzzy limits, very large documents) are completely untested. Given the complexity and the critical nature of search accuracy and data integrity, this file requires comprehensive test coverage starting with the core CRUD operations and search functionality."
+      },
+      "refactorings": {
+        "file": "/tmp/MiniSearch.ts",
+        "suggestions": [
+          {
+            "type": "extract-function",
+            "location": "lines 722-757 (add method)",
+            "impact": "high",
+            "description": "Extract document field processing logic from the add method into a separate method. The nested loop handling field tokenization and term processing is complex and does multiple things.",
+            "before": "add (document: T): void {\n  const { extractField, tokenize, processTerm, fields, idField } = this._options\n  const id = extractField(document, idField)\n  if (id == null) {\n    throw new Error(`MiniSearch: document does not have ID field \"${idField}\"`)\n  }\n\n  if (this._idToShortId.has(id)) {\n    throw new Error(`MiniSearch: duplicate ID ${id}`)\n  }\n\n  const shortDocumentId = this.addDocumentId(id)\n  this.saveStoredFields(shortDocumentId, document)\n\n  for (const field of fields) {\n    const fieldValue = extractField(document, field)\n    if (fieldValue == null) continue\n\n    const tokens = tokenize(fieldValue.toString(), field)\n    const fieldId = this._fieldIds[field]\n\n    const uniqueTerms = new Set(tokens).size\n    this.addFieldLength(shortDocumentId, fieldId, this._documentCount - 1, uniqueTerms)\n\n    for (const term of tokens) {\n      const processedTerm = processTerm(term, field)\n      if (Array.isArray(processedTerm)) {\n        for (const t of processedTerm) {\n          this.addTerm(fieldId, shortDocumentId, t)\n        }\n      } else if (processedTerm) {\n        this.addTerm(fieldId, shortDocumentId, processedTerm)\n      }\n    }\n  }\n}",
+            "after": "add (document: T): void {\n  const { extractField, idField } = this._options\n  const id = extractField(document, idField)\n  if (id == null) {\n    throw new Error(`MiniSearch: document does not have ID field \"${idField}\"`)\n  }\n\n  if (this._idToShortId.has(id)) {\n    throw new Error(`MiniSearch: duplicate ID ${id}`)\n  }\n\n  const shortDocumentId = this.addDocumentId(id)\n  this.saveStoredFields(shortDocumentId, document)\n  this.indexDocumentFields(shortDocumentId, document)\n}\n\nprivate indexDocumentFields(shortDocumentId: number, document: T): void {\n  const { extractField, tokenize, processTerm, fields } = this._options\n\n  for (const field of fields) {\n    const fieldValue = extractField(document, field)\n    if (fieldValue == null) continue\n\n    const tokens = tokenize(fieldValue.toString(), field)\n    const fieldId = this._fieldIds[field]\n\n    const uniqueTerms = new Set(tokens).size\n    this.addFieldLength(shortDocumentId, fieldId, this._documentCount - 1, uniqueTerms)\n\n    this.indexFieldTokens(fieldId, shortDocumentId, field, tokens)\n  }\n}\n\nprivate indexFieldTokens(fieldId: number, shortDocumentId: number, field: string, tokens: string[]): void {\n  const { processTerm } = this._options\n\n  for (const term of tokens) {\n    const processedTerm = processTerm(term, field)\n    if (Array.isArray(processedTerm)) {\n      for (const t of processedTerm) {\n        this.addTerm(fieldId, shortDocumentId, t)\n      }\n    } else if (processedTerm) {\n      this.addTerm(fieldId, shortDocumentId, processedTerm)\n    }\n  }\n}",
+            "benefits": "Improves testability by isolating field indexing logic. Reduces cognitive complexity of the add method from handling validation, ID management, and indexing all at once. Makes the code easier to understand and maintain. The single responsibility principle is better respected."
+          },
+          {
+            "type": "extract-function",
+            "location": "lines 814-855 (remove method)",
+            "impact": "high",
+            "description": "The remove method has the same nested field processing logic as add. Extract shared document field processing pattern.",
+            "before": "remove (document: T): void {\n  const { tokenize, processTerm, extractField, fields, idField } = this._options\n  const id = extractField(document, idField)\n\n  if (id == null) {\n    throw new Error(`MiniSearch: document does not have ID field \"${idField}\"`)\n  }\n\n  const shortId = this._idToShortId.get(id)\n\n  if (shortId == null) {\n    throw new Error(`MiniSearch: cannot remove document with ID ${id}: it is not in the index`)\n  }\n\n  for (const field of fields) {\n    const fieldValue = extractField(document, field)\n    if (fieldValue == null) continue\n\n    const tokens = tokenize(fieldValue.toString(), field)\n    const fieldId = this._fieldIds[field]\n\n    const uniqueTerms = new Set(tokens).size\n    this.removeFieldLength(shortId, fieldId, this._documentCount, uniqueTerms)\n\n    for (const term of tokens) {\n      const processedTerm = processTerm(term, field)\n      if (Array.isArray(processedTerm)) {\n        for (const t of processedTerm) {\n          this.removeTerm(fieldId, shortId, t)\n        }\n      } else if (processedTerm) {\n        this.removeTerm(fieldId, shortId, processedTerm)\n      }\n    }\n  }\n\n  this._storedFields.delete(shortId)\n  this._documentIds.delete(shortId)\n  this._idToShortId.delete(id)\n  this._fieldLength.delete(shortId)\n  this._documentCount -= 1\n}",
+            "after": "remove (document: T): void {\n  const { extractField, idField } = this._options\n  const id = extractField(document, idField)\n\n  if (id == null) {\n    throw new Error(`MiniSearch: document does not have ID field \"${idField}\"`)\n  }\n\n  const shortId = this._idToShortId.get(id)\n\n  if (shortId == null) {\n    throw new Error(`MiniSearch: cannot remove document with ID ${id}: it is not in the index`)\n  }\n\n  this.unindexDocumentFields(shortId, document)\n  this.removeDocumentReferences(shortId, id)\n}\n\nprivate unindexDocumentFields(shortId: number, document: T): void {\n  const { extractField, tokenize, processTerm, fields } = this._options\n\n  for (const field of fields) {\n    const fieldValue = extractField(document, field)\n    if (fieldValue == null) continue\n\n    const tokens = tokenize(fieldValue.toString(), field)\n    const fieldId = this._fieldIds[field]\n\n    const uniqueTerms = new Set(tokens).size\n    this.removeFieldLength(shortId, fieldId, this._documentCount, uniqueTerms)\n\n    this.unindexFieldTokens(fieldId, shortId, field, tokens)\n  }\n}\n\nprivate unindexFieldTokens(fieldId: number, shortId: number, field: string, tokens: string[]): void {\n  const { processTerm } = this._options\n\n  for (const term of tokens) {\n    const processedTerm = processTerm(term, field)\n    if (Array.isArray(processedTerm)) {\n      for (const t of processedTerm) {\n        this.removeTerm(fieldId, shortId, t)\n      }\n    } else if (processedTerm) {\n      this.removeTerm(fieldId, shortId, processedTerm)\n    }\n  }\n}\n\nprivate removeDocumentReferences(shortId: number, id: any): void {\n  this._storedFields.delete(shortId)\n  this._documentIds.delete(shortId)\n  this._idToShortId.delete(id)\n  this._fieldLength.delete(shortId)\n  this._documentCount -= 1\n}",
+            "benefits": "Reduces code duplication between add and remove methods. The token processing logic is nearly identical and should be extracted. Improves maintainability - changes to token processing only need to happen in one place. Makes the symmetry between add/remove operations clearer."
+          },
+          {
+            "type": "simplify",
+            "location": "lines 1696-1761 (executeQuerySpec method)",
+            "impact": "medium",
+            "description": "The executeQuerySpec method has deeply nested conditionals and complex logic for prefix and fuzzy matching. Extract prefix and fuzzy result processing into separate methods.",
+            "before": "private executeQuerySpec (query: QuerySpec, searchOptions: SearchOptions): RawResult {\n  const options: SearchOptionsWithDefaults = { ...this._options.searchOptions, ...searchOptions }\n\n  const boosts = (options.fields || this._options.fields).reduce((boosts, field) =>\n    ({ ...boosts, [field]: getOwnProperty(options.boost, field) || 1 }), {})\n\n  const {\n    boostDocument,\n    weights,\n    maxFuzzy,\n    bm25: bm25params\n  } = options\n\n  const {\n    fuzzy: fuzzyWeight = defaultSearchOptions.weights.fuzzy,\n    prefix: prefixWeight = defaultSearchOptions.weights.prefix\n  } = weights || {}\n\n  const data = this._index.get(query.term)\n  const results = this.termResults(query.term, query.term, 1, query.termBoost, data, boosts, boostDocument, bm25params)\n\n  let prefixMatches\n  let fuzzyMatches\n\n  if (query.prefix) {\n    prefixMatches = this._index.atPrefix(query.term)\n  }\n\n  if (query.fuzzy) {\n    const fuzzy = (query.fuzzy === true) ? 0.2 : query.fuzzy\n    const maxDistance = fuzzy < 1 ? Math.min(maxFuzzy, Math.round(query.term.length * fuzzy)) : fuzzy\n    if (maxDistance) fuzzyMatches = this._index.fuzzyGet(query.term, maxDistance)\n  }\n\n  if (prefixMatches) {\n    for (const [term, data] of prefixMatches) {\n      const distance = term.length - query.term.length\n      if (!distance) { continue }\n      fuzzyMatches?.delete(term)\n      const weight = prefixWeight * term.length / (term.length + 0.3 * distance)\n      this.termResults(query.term, term, weight, query.termBoost, data, boosts, boostDocument, bm25params, results)\n    }\n  }\n\n  if (fuzzyMatches) {\n    for (const term of fuzzyMatches.keys()) {\n      const [data, distance] = fuzzyMatches.get(term)!\n      if (!distance) { continue }\n      const weight = fuzzyWeight * term.length / (term.length + distance)\n      this.termResults(query.term, term, weight, query.termBoost, data, boosts, boostDocument, bm25params, results)\n    }\n  }\n\n  return results\n}",
+            "after": "private executeQuerySpec (query: QuerySpec, searchOptions: SearchOptions): RawResult {\n  const options: SearchOptionsWithDefaults = { ...this._options.searchOptions, ...searchOptions }\n\n  const boosts = this.computeFieldBoosts(options)\n  const { boostDocument, weights, maxFuzzy, bm25: bm25params } = options\n  const { fuzzy: fuzzyWeight = defaultSearchOptions.weights.fuzzy, prefix: prefixWeight = defaultSearchOptions.weights.prefix } = weights || {}\n\n  const data = this._index.get(query.term)\n  const results = this.termResults(query.term, query.term, 1, query.termBoost, data, boosts, boostDocument, bm25params)\n\n  const { prefixMatches, fuzzyMatches } = this.findMatches(query, maxFuzzy)\n\n  this.addPrefixResults(query, prefixMatches, fuzzyMatches, prefixWeight, boosts, boostDocument, bm25params, results)\n  this.addFuzzyResults(query, fuzzyMatches, fuzzyWeight, boosts, boostDocument, bm25params, results)\n\n  return results\n}\n\nprivate computeFieldBoosts(options: SearchOptionsWithDefaults): { [field: string]: number } {\n  return (options.fields || this._options.fields).reduce((boosts, field) =>\n    ({ ...boosts, [field]: getOwnProperty(options.boost, field) || 1 }), {})\n}\n\nprivate findMatches(query: QuerySpec, maxFuzzy: number) {\n  let prefixMatches\n  let fuzzyMatches\n\n  if (query.prefix) {\n    prefixMatches = this._index.atPrefix(query.term)\n  }\n\n  if (query.fuzzy) {\n    const fuzzy = (query.fuzzy === true) ? 0.2 : query.fuzzy\n    const maxDistance = fuzzy < 1 ? Math.min(maxFuzzy, Math.round(query.term.length * fuzzy)) : fuzzy\n    if (maxDistance) fuzzyMatches = this._index.fuzzyGet(query.term, maxDistance)\n  }\n\n  return { prefixMatches, fuzzyMatches }\n}\n\nprivate addPrefixResults(query: QuerySpec, prefixMatches: any, fuzzyMatches: any, prefixWeight: number, boosts: any, boostDocument: any, bm25params: BM25Params, results: RawResult): void {\n  if (!prefixMatches) return\n\n  for (const [term, data] of prefixMatches) {\n    const distance = term.length - query.term.length\n    if (!distance) continue\n    fuzzyMatches?.delete(term)\n    const weight = prefixWeight * term.length / (term.length + 0.3 * distance)\n    this.termResults(query.term, term, weight, query.termBoost, data, boosts, boostDocument, bm25params, results)\n  }\n}\n\nprivate addFuzzyResults(query: QuerySpec, fuzzyMatches: any, fuzzyWeight: number, boosts: any, boostDocument: any, bm25params: BM25Params, results: RawResult): void {\n  if (!fuzzyMatches) return\n\n  for (const term of fuzzyMatches.keys()) {\n    const [data, distance] = fuzzyMatches.get(term)!\n    if (!distance) continue\n    const weight = fuzzyWeight * term.length / (term.length + distance)\n    this.termResults(query.term, term, weight, query.termBoost, data, boosts, boostDocument, bm25params, results)\n  }\n}",
+            "benefits": "Reduces the complexity of executeQuerySpec from doing too many things. Each extracted method has a single clear purpose. Improves readability by giving descriptive names to complex operations. Makes testing individual match strategies easier."
+          },
+          {
+            "type": "simplify",
+            "location": "lines 779-797 (addAllAsync method)",
+            "impact": "medium",
+            "description": "The addAllAsync method uses a complex reduce pattern that's hard to follow. Simplify with a clearer async iteration approach.",
+            "before": "addAllAsync (documents: readonly T[], options: { chunkSize?: number } = {}): Promise<void> {\n  const { chunkSize = 10 } = options\n  const acc: { chunk: T[], promise: Promise<void> } = { chunk: [], promise: Promise.resolve() }\n\n  const { chunk, promise } = documents.reduce(({ chunk, promise }, document: T, i: number) => {\n    chunk.push(document)\n    if ((i + 1) % chunkSize === 0) {\n      return {\n        chunk: [],\n        promise: promise\n          .then(() => new Promise(resolve => setTimeout(resolve, 0)))\n          .then(() => this.addAll(chunk))\n      }\n    } else {\n      return { chunk, promise }\n    }\n  }, acc)\n\n  return promise.then(() => this.addAll(chunk))\n}",
+            "after": "async addAllAsync (documents: readonly T[], options: { chunkSize?: number } = {}): Promise<void> {\n  const { chunkSize = 10 } = options\n\n  for (let i = 0; i < documents.length; i += chunkSize) {\n    const chunk = documents.slice(i, i + chunkSize)\n    this.addAll(chunk)\n    \n    // Yield to event loop between chunks\n    if (i + chunkSize < documents.length) {\n      await new Promise(resolve => setTimeout(resolve, 0))\n    }\n  }\n}",
+            "benefits": "Much clearer control flow using standard async/await. Eliminates the confusing reduce accumulator pattern. Easier to understand the chunking behavior. Performance is equivalent but code is more maintainable."
+          },
+          {
+            "type": "simplify",
+            "location": "lines 1074-1114 (performVacuuming method)",
+            "impact": "medium",
+            "description": "Deep nesting of loops in performVacuuming makes it hard to follow. Extract inner cleanup logic.",
+            "before": "private async performVacuuming (options: VacuumOptions, conditions?: VacuumConditions): Promise<void> {\n  const initialDirtCount = this._dirtCount\n\n  if (this.vacuumConditionsMet(conditions)) {\n    const batchSize = options.batchSize || defaultVacuumOptions.batchSize\n    const batchWait = options.batchWait || defaultVacuumOptions.batchWait\n    let i = 1\n\n    for (const [term, fieldsData] of this._index) {\n      for (const [fieldId, fieldIndex] of fieldsData) {\n        for (const [shortId] of fieldIndex) {\n          if (this._documentIds.has(shortId)) { continue }\n\n          if (fieldIndex.size <= 1) {\n            fieldsData.delete(fieldId)\n          } else {\n            fieldIndex.delete(shortId)\n          }\n        }\n      }\n\n      if (this._index.get(term)!.size === 0) {\n        this._index.delete(term)\n      }\n\n      if (i % batchSize === 0) {\n        await new Promise((resolve) => setTimeout(resolve, batchWait))\n      }\n\n      i += 1\n    }\n\n    this._dirtCount -= initialDirtCount\n  }\n\n  await null\n\n  this._currentVacuum = this._enqueuedVacuum\n  this._enqueuedVacuum = null\n}",
+            "after": "private async performVacuuming (options: VacuumOptions, conditions?: VacuumConditions): Promise<void> {\n  const initialDirtCount = this._dirtCount\n\n  if (this.vacuumConditionsMet(conditions)) {\n    await this.cleanupIndex(options)\n    this._dirtCount -= initialDirtCount\n  }\n\n  await null\n\n  this._currentVacuum = this._enqueuedVacuum\n  this._enqueuedVacuum = null\n}\n\nprivate async cleanupIndex(options: VacuumOptions): Promise<void> {\n  const batchSize = options.batchSize || defaultVacuumOptions.batchSize\n  const batchWait = options.batchWait || defaultVacuumOptions.batchWait\n  let i = 1\n\n  for (const [term, fieldsData] of this._index) {\n    this.cleanupTermEntry(term, fieldsData)\n\n    if (i % batchSize === 0) {\n      await new Promise((resolve) => setTimeout(resolve, batchWait))\n    }\n    i += 1\n  }\n}\n\nprivate cleanupTermEntry(term: string, fieldsData: FieldTermData): void {\n  for (const [fieldId, fieldIndex] of fieldsData) {\n    for (const [shortId] of fieldIndex) {\n      if (this._documentIds.has(shortId)) continue\n\n      if (fieldIndex.size <= 1) {\n        fieldsData.delete(fieldId)\n      } else {\n        fieldIndex.delete(shortId)\n      }\n    }\n  }\n\n  if (this._index.get(term)!.size === 0) {\n    this._index.delete(term)\n  }\n}",
+            "benefits": "Reduces nesting from 3 levels to 2 levels maximum. Makes the batching logic and cleanup logic separate concerns. Easier to test the cleanup logic in isolation. Improves readability by giving clear names to operations."
+          },
+          {
+            "type": "modernize",
+            "location": "lines 2041-2042 (getOwnProperty function)",
+            "impact": "low",
+            "description": "Replace hasOwnProperty pattern with modern Object.hasOwn (available in ES2022/TypeScript 4.5+).",
+            "before": "const getOwnProperty = (object: any, property: string) =>\n  Object.prototype.hasOwnProperty.call(object, property) ? object[property] : undefined",
+            "after": "const getOwnProperty = (object: any, property: string) =>\n  Object.hasOwn(object, property) ? object[property] : undefined",
+            "benefits": "Uses the modern, built-in Object.hasOwn method which is more concise and avoids the verbose prototype chain call. This is the recommended approach in modern JavaScript/TypeScript. Cleaner and more idiomatic code."
+          },
+          {
+            "type": "simplify",
+            "location": "lines 1852-1918 (termResults method)",
+            "impact": "high",
+            "description": "The termResults method has complex nested logic with multiple responsibilities. Extract result merging logic.",
+            "before": "private termResults (\n  sourceTerm: string,\n  derivedTerm: string,\n  termWeight: number,\n  termBoost: number,\n  fieldTermData: FieldTermData | undefined,\n  fieldBoosts: { [field: string]: number },\n  boostDocumentFn: ((id: any, term: string, storedFields?: Record<string, unknown>) => number) | undefined,\n  bm25params: BM25Params,\n  results: RawResult = new Map()\n): RawResult {\n  if (fieldTermData == null) return results\n\n  for (const field of Object.keys(fieldBoosts)) {\n    const fieldBoost = fieldBoosts[field]\n    const fieldId = this._fieldIds[field]\n\n    const fieldTermFreqs = fieldTermData.get(fieldId)\n    if (fieldTermFreqs == null) continue\n\n    let matchingFields = fieldTermFreqs.size\n    const avgFieldLength = this._avgFieldLength[fieldId]\n\n    for (const docId of fieldTermFreqs.keys()) {\n      if (!this._documentIds.has(docId)) {\n        this.removeTerm(fieldId, docId, derivedTerm)\n        matchingFields -= 1\n        continue\n      }\n\n      const docBoost = boostDocumentFn ? boostDocumentFn(this._documentIds.get(docId), derivedTerm, this._storedFields.get(docId)) : 1\n      if (!docBoost) continue\n\n      const termFreq = fieldTermFreqs.get(docId)!\n      const fieldLength = this._fieldLength.get(docId)![fieldId]\n\n      const rawScore = calcBM25Score(termFreq, matchingFields, this._documentCount, fieldLength, avgFieldLength, bm25params)\n      const weightedScore = termWeight * termBoost * fieldBoost * docBoost * rawScore\n\n      const result = results.get(docId)\n      if (result) {\n        result.score += weightedScore\n        assignUniqueTerm(result.terms, sourceTerm)\n        const match = getOwnProperty(result.match, derivedTerm)\n        if (match) {\n          match.push(field)\n        } else {\n          result.match[derivedTerm] = [field]\n        }\n      } else {\n        results.set(docId, {\n          score: weightedScore,\n          terms: [sourceTerm],\n          match: { [derivedTerm]: [field] }\n        })\n      }\n    }\n  }\n\n  return results\n}",
+            "after": "private termResults (\n  sourceTerm: string,\n  derivedTerm: string,\n  termWeight: number,\n  termBoost: number,\n  fieldTermData: FieldTermData | undefined,\n  fieldBoosts: { [field: string]: number },\n  boostDocumentFn: ((id: any, term: string, storedFields?: Record<string, unknown>) => number) | undefined,\n  bm25params: BM25Params,\n  results: RawResult = new Map()\n): RawResult {\n  if (fieldTermData == null) return results\n\n  for (const field of Object.keys(fieldBoosts)) {\n    this.addFieldTermResults(\n      field,\n      sourceTerm,\n      derivedTerm,\n      termWeight,\n      termBoost,\n      fieldBoosts[field],\n      fieldTermData,\n      boostDocumentFn,\n      bm25params,\n      results\n    )\n  }\n\n  return results\n}\n\nprivate addFieldTermResults(\n  field: string,\n  sourceTerm: string,\n  derivedTerm: string,\n  termWeight: number,\n  termBoost: number,\n  fieldBoost: number,\n  fieldTermData: FieldTermData,\n  boostDocumentFn: ((id: any, term: string, storedFields?: Record<string, unknown>) => number) | undefined,\n  bm25params: BM25Params,\n  results: RawResult\n): void {\n  const fieldId = this._fieldIds[field]\n  const fieldTermFreqs = fieldTermData.get(fieldId)\n  if (fieldTermFreqs == null) return\n\n  let matchingFields = fieldTermFreqs.size\n  const avgFieldLength = this._avgFieldLength[fieldId]\n\n  for (const docId of fieldTermFreqs.keys()) {\n    if (!this._documentIds.has(docId)) {\n      this.removeTerm(fieldId, docId, derivedTerm)\n      matchingFields -= 1\n      continue\n    }\n\n    const docBoost = boostDocumentFn ? boostDocumentFn(this._documentIds.get(docId), derivedTerm, this._storedFields.get(docId)) : 1\n    if (!docBoost) continue\n\n    const termFreq = fieldTermFreqs.get(docId)!\n    const fieldLength = this._fieldLength.get(docId)![fieldId]\n    const rawScore = calcBM25Score(termFreq, matchingFields, this._documentCount, fieldLength, avgFieldLength, bm25params)\n    const weightedScore = termWeight * termBoost * fieldBoost * docBoost * rawScore\n\n    this.mergeResultScore(results, docId, weightedScore, sourceTerm, derivedTerm, field)\n  }\n}\n\nprivate mergeResultScore(\n  results: RawResult,\n  docId: number,\n  weightedScore: number,\n  sourceTerm: string,\n  derivedTerm: string,\n  field: string\n): void {\n  const result = results.get(docId)\n  if (result) {\n    result.score += weightedScore\n    assignUniqueTerm(result.terms, sourceTerm)\n    const match = getOwnProperty(result.match, derivedTerm)\n    if (match) {\n      match.push(field)\n    } else {\n      result.match[derivedTerm] = [field]\n    }\n  } else {\n    results.set(docId, {\n      score: weightedScore,\n      terms: [sourceTerm],\n      match: { [derivedTerm]: [field] }\n    })\n  }\n}",
+            "benefits": "Breaks down a complex 67-line method into smaller, focused pieces. Each method has a clear single responsibility. Reduces nesting levels and improves readability. Makes the scoring and result merging logic testable in isolation. The parameter list is long but explicit, making dependencies clear."
+          },
+          {
+            "type": "pattern-improvement",
+            "location": "lines 670-715 (constructor)",
+            "impact": "medium",
+            "description": "The constructor has too many responsibilities - validation, option merging, and state initialization. Extract state initialization.",
+            "before": "constructor (options: Options<T>) {\n  if (options?.fields == null) {\n    throw new Error('MiniSearch: option \"fields\" must be provided')\n  }\n\n  const autoVacuum = (options.autoVacuum == null || options.autoVacuum === true) ? defaultAutoVacuumOptions : options.autoVacuum\n\n  this._options = {\n    ...defaultOptions,\n    ...options,\n    autoVacuum,\n    searchOptions: { ...defaultSearchOptions, ...(options.searchOptions || {}) },\n    autoSuggestOptions: { ...defaultAutoSuggestOptions, ...(options.autoSuggestOptions || {}) }\n  }\n\n  this._index = new SearchableMap()\n\n  this._documentCount = 0\n\n  this._documentIds = new Map()\n\n  this._idToShortId = new Map()\n\n  this._fieldIds = {}\n\n  this._fieldLength = new Map()\n\n  this._avgFieldLength = []\n\n  this._nextId = 0\n\n  this._storedFields = new Map()\n\n  this._dirtCount = 0\n\n  this._currentVacuum = null\n\n  this._enqueuedVacuum = null\n  this._enqueuedVacuumConditions = defaultVacuumConditions\n\n  this.addFields(this._options.fields)\n}",
+            "after": "constructor (options: Options<T>) {\n  this.validateOptions(options)\n  this._options = this.mergeOptions(options)\n  this.initializeState()\n  this.addFields(this._options.fields)\n}\n\nprivate validateOptions(options: Options<T>): void {\n  if (options?.fields == null) {\n    throw new Error('MiniSearch: option \"fields\" must be provided')\n  }\n}\n\nprivate mergeOptions(options: Options<T>): OptionsWithDefaults<T> {\n  const autoVacuum = (options.autoVacuum == null || options.autoVacuum === true) \n    ? defaultAutoVacuumOptions \n    : options.autoVacuum\n\n  return {\n    ...defaultOptions,\n    ...options,\n    autoVacuum,\n    searchOptions: { ...defaultSearchOptions, ...(options.searchOptions || {}) },\n    autoSuggestOptions: { ...defaultAutoSuggestOptions, ...(options.autoSuggestOptions || {}) }\n  }\n}\n\nprivate initializeState(): void {\n  this._index = new SearchableMap()\n  this._documentCount = 0\n  this._documentIds = new Map()\n  this._idToShortId = new Map()\n  this._fieldIds = {}\n  this._fieldLength = new Map()\n  this._avgFieldLength = []\n  this._nextId = 0\n  this._storedFields = new Map()\n  this._dirtCount = 0\n  this._currentVacuum = null\n  this._enqueuedVacuum = null\n  this._enqueuedVacuumConditions = defaultVacuumConditions\n}",
+            "benefits": "Separates validation, configuration, and initialization concerns. Makes the constructor's flow much clearer - validate, configure, initialize, setup fields. The initializeState method could be reused if a reset functionality is needed. Improves testability by isolating option merging logic."
+          }
+        ],
+        "summary": "The MiniSearch.ts file is a well-structured search library but contains several methods with high complexity that would benefit from refactoring. The most impactful improvements are: (1) extracting the duplicated field processing logic from add/remove methods into shared helpers, reducing ~70 lines of duplication; (2) breaking down the complex executeQuerySpec and termResults methods which have deep nesting and multiple responsibilities; (3) simplifying the async iteration patterns to use modern async/await; (4) extracting constructor responsibilities into separate initialization methods. These refactorings would significantly improve maintainability, testability, and code clarity while preserving the existing API and functionality."
+      }
+    }
+  ],
+  "summary": {
+    "totalFiles": 1,
+    "overallScore": 82,
+    "criticalIssues": 0,
+    "highPriorityTests": 21,
+    "refactoringOpportunities": 8
+  },
+  "recommendations": [
+    {
+      "priority": "critical",
+      "category": "Test Coverage",
+      "description": "Core document management operations (add, remove, discard) lack any test coverage. These are critical for data integrity and represent the primary API surface. Missing tests for edge cases like null/undefined field values, duplicate IDs, and extremely large field values.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    },
+    {
+      "priority": "critical",
+      "category": "Test Coverage",
+      "description": "Constructor validation and initialization lacks test coverage for critical edge cases including null/undefined options parameter, empty fields array, invalid autoVacuum configurations, and duplicate field names.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    },
+    {
+      "priority": "critical",
+      "category": "Test Coverage",
+      "description": "Serialization/deserialization (loadJSON, loadJSONAsync) completely untested for critical failure scenarios including malformed JSON, version mismatch, missing required fields, and corrupted index data. This represents a significant business risk for data persistence.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    },
+    {
+      "priority": "high",
+      "category": "Performance",
+      "description": "O(n²) complexity in duplicate term detection (lines 2192, 2198) using array.includes() in loops. Should use Set-based approach to reduce complexity from O(n²) to O(n), especially critical for large document collections.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    },
+    {
+      "priority": "high",
+      "category": "Test Coverage",
+      "description": "Search functionality with complex query trees, filters, and prefix/fuzzy matching lacks comprehensive test coverage. Missing tests for deeply nested queries (5+ levels), filter functions that throw errors, and edge cases in fuzzy matching thresholds.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    }
+  ],
+  "metadata": {
+    "analyzedAt": "2026-09-27T00:00:00.000Z",
+    "duration": 414719,
+    "agentVersions": {
+      "codeQuality": "1.0",
+      "testCoverage": "1.0",
+      "refactoring": "1.0"
+    }
+  }
+}

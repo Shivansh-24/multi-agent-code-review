@@ -1,0 +1,30 @@
+{"level":"info","message":"Starting review of octocat/Hello-World PR #1...","service":"code-review-system","timestamp":"2026-09-27 05:18:01"}
+{"level":"info","message":"Review complete. Reports saved:","service":"code-review-system","timestamp":"2026-09-27 05:19:03"}
+{"level":"info","message":"  JSON:     reports/octocat_Hello-World_1.json","service":"code-review-system","timestamp":"2026-09-27 05:19:03"}
+{"level":"info","message":"  Markdown: reports/octocat_Hello-World_1.md","service":"code-review-system","timestamp":"2026-09-27 05:19:03"}
+{"level":"info","message":"  HTML:     reports/octocat_Hello-World_1.html","service":"code-review-system","timestamp":"2026-09-27 05:19:03"}
+{"level":"info","message":"  Overall score: 0/100","service":"code-review-system","timestamp":"2026-09-27 05:19:03"}
+{"level":"info","message":"Starting review of airaamane/simple-todo-app PR #1...","service":"code-review-system","timestamp":"2026-09-27 05:22:49"}
+{"level":"info","message":"Review complete. Reports saved:","service":"code-review-system","timestamp":"2026-09-27 05:23:09"}
+{"level":"info","message":"  JSON:     reports/airaamane_simple-todo-app_1.json","service":"code-review-system","timestamp":"2026-09-27 05:23:09"}
+{"level":"info","message":"  Markdown: reports/airaamane_simple-todo-app_1.md","service":"code-review-system","timestamp":"2026-09-27 05:23:09"}
+{"level":"info","message":"  HTML:     reports/airaamane_simple-todo-app_1.html","service":"code-review-system","timestamp":"2026-09-27 05:23:09"}
+{"level":"info","message":"  Overall score: 0/100","service":"code-review-system","timestamp":"2026-09-27 05:23:09"}
+{"level":"info","message":"Starting review of shinshin86/todo-opfs-sqlite PR #1...","service":"code-review-system","timestamp":"2026-09-27 05:43:23"}
+{"level":"info","message":"Review complete. Reports saved:","service":"code-review-system","timestamp":"2026-09-27 05:48:21"}
+{"level":"info","message":"  JSON:     reports/shinshin86_todo-opfs-sqlite_1.json","service":"code-review-system","timestamp":"2026-09-27 05:48:21"}
+{"level":"info","message":"  Markdown: reports/shinshin86_todo-opfs-sqlite_1.md","service":"code-review-system","timestamp":"2026-09-27 05:48:21"}
+{"level":"info","message":"  HTML:     reports/shinshin86_todo-opfs-sqlite_1.html","service":"code-review-system","timestamp":"2026-09-27 05:48:21"}
+{"level":"info","message":"  Overall score: 42/100","service":"code-review-system","timestamp":"2026-09-27 05:48:21"}
+{"level":"info","message":"Starting review of lucaong/minisearch PR #295...","service":"code-review-system","timestamp":"2026-09-27 05:50:39"}
+{"level":"info","message":"Review complete. Reports saved:","service":"code-review-system","timestamp":"2026-09-27 05:57:34"}
+{"level":"info","message":"  JSON:     reports/lucaong_minisearch_295.json","service":"code-review-system","timestamp":"2026-09-27 05:57:34"}
+{"level":"info","message":"  Markdown: reports/lucaong_minisearch_295.md","service":"code-review-system","timestamp":"2026-09-27 05:57:34"}
+{"level":"info","message":"  HTML:     reports/lucaong_minisearch_295.html","service":"code-review-system","timestamp":"2026-09-27 05:57:34"}
+{"level":"info","message":"  Overall score: 82/100","service":"code-review-system","timestamp":"2026-09-27 05:57:34"}
+{"level":"info","message":"Starting review of lucaong/minisearch PR #305...","service":"code-review-system","timestamp":"2026-09-27 05:58:34"}
+{"level":"info","message":"Review complete. Reports saved:","service":"code-review-system","timestamp":"2026-09-27 06:15:51"}
+{"level":"info","message":"  JSON:     reports/lucaong_minisearch_305.json","service":"code-review-system","timestamp":"2026-09-27 06:15:51"}
+{"level":"info","message":"  Markdown: reports/lucaong_minisearch_305.md","service":"code-review-system","timestamp":"2026-09-27 06:15:51"}
+{"level":"info","message":"  HTML:     reports/lucaong_minisearch_305.html","service":"code-review-system","timestamp":"2026-09-27 06:15:51"}
+{"level":"info","message":"  Overall score: 78/100","service":"code-review-system","timestamp":"2026-09-27 06:15:51"}

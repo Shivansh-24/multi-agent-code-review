@@ -1,0 +1,414 @@
+{
+  "pullRequest": {
+    "owner": "lucaong",
+    "repo": "minisearch",
+    "number": 305
+  },
+  "fileReviews": [
+    {
+      "file": "src/MiniSearch.ts",
+      "codeQuality": {
+        "file": "/tmp/pr-305-review/MiniSearch.ts",
+        "issues": [
+          {
+            "line": 62,
+            "severity": "medium",
+            "category": "best-practice",
+            "description": "boostDocument function parameter uses 'any' type for documentId, reducing type safety",
+            "suggestion": "Use a generic type constraint or specific type instead of 'any'. Consider 'boostDocument?: (documentId: T[keyof T], term: string, storedFields?: Record<string, unknown>) => number'"
+          },
+          {
+            "line": 195,
+            "severity": "medium",
+            "category": "best-practice",
+            "description": "Generic type parameter defaults to 'any', reducing type safety throughout the codebase",
+            "suggestion": "Consider using 'unknown' instead of 'any' as the default, or require explicit typing: 'export type Options<T = Record<string, unknown>>'"
+          },
+          {
+            "line": 225,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "extractField function returns 'any' instead of a more specific type",
+            "suggestion": "Use 'unknown' or define the return type more specifically: 'extractField?: (document: T, fieldName: string) => unknown'"
+          },
+          {
+            "line": 256,
+            "severity": "low",
+            "category": "best-practice",
+            "description": "stringifyField accepts 'any' for fieldValue parameter",
+            "suggestion": "Use 'unknown' instead: 'stringifyField?: (fieldValue: unknown, fieldName: string) => string'"
+          },
+          {
+            "line": 413,
+            "severity": "medium",
+            "category": "best-practice",
+            "description": "SearchResult id field uses 'any' type, reducing type safety",
+            "suggestion": "Use generic constraints to preserve the ID type from the document type"
+          },
+          {
+            "line": 695,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "Null check uses '==' instead of '===', although functionally correct here",
+            "suggestion": "Use strict equality: 'if (options?.fields === null || options?.fields === undefined)' or 'if (options?.fields == null)' with a comment explaining intentional loose equality"
+          },
+          {
+            "line": 749,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "Uses '==' for null check without explicit comment about intentional loose equality",
+            "suggestion": "Use '=== null || === undefined' or add comment: '// Intentionally using == to check both null and undefined'"
+          },
+          {
+            "line": 767,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Creates a Set to count unique terms but discards it immediately, potentially wasteful for large token arrays",
+            "suggestion": "Store the Set if used elsewhere, or directly iterate and count: 'const uniqueTerms = new Set(tokens); const uniqueCount = uniqueTerms.size;' and use uniqueTerms in the loop"
+          },
+          {
+            "line": 813,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Uses setTimeout with 0ms delay for async batching, which may not be optimal for all environments",
+            "suggestion": "Consider using 'queueMicrotask' or 'setImmediate' (Node.js) for better performance, or make delay configurable"
+          },
+          {
+            "line": 842,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "Multiple loose equality checks (==) without comments explaining intentional usage",
+            "suggestion": "Use strict equality (===) or document why loose equality is needed with inline comments"
+          },
+          {
+            "line": 859,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Creates new Set to count unique terms during removal, same as in add() - could be optimized",
+            "suggestion": "Consider caching unique term counts or using a more efficient counting method"
+          },
+          {
+            "line": 1119,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "Non-null assertion operator (!) used without prior null check",
+            "suggestion": "Add explicit null check: 'const indexTerm = this._index.get(term); if (indexTerm && indexTerm.size === 0) { this._index.delete(term) }'"
+          },
+          {
+            "line": 1383,
+            "severity": "low",
+            "category": "performance",
+            "description": "Spreads objects multiple times which creates intermediate objects",
+            "suggestion": "Consider Object.assign for better performance in hot paths: 'const searchOptionsWithDefaults = Object.assign({}, globalSearchOptions, searchOptions)'"
+          },
+          {
+            "line": 1525,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "Throws error when options is null but allows undefined, inconsistent null handling",
+            "suggestion": "Use strict null check: 'if (options === null || options === undefined)' or 'if (!options)'"
+          },
+          {
+            "line": 1528,
+            "severity": "medium",
+            "category": "security",
+            "description": "JSON.parse without try-catch could cause application crash on malformed input",
+            "suggestion": "Wrap in try-catch: 'try { return this.loadJS(JSON.parse(json), options) } catch (e) { throw new Error(`MiniSearch: invalid JSON: ${e.message}`) }'"
+          },
+          {
+            "line": 1548,
+            "severity": "medium",
+            "category": "security",
+            "description": "JSON.parse in async function without try-catch, same issue as loadJSON",
+            "suggestion": "Add error handling: 'let parsed; try { parsed = JSON.parse(json) } catch (e) { throw new Error(`Invalid JSON: ${e.message}`) }'"
+          },
+          {
+            "line": 1679,
+            "severity": "medium",
+            "category": "maintainability",
+            "description": "Magic numbers for serialization versions without constants",
+            "suggestion": "Define constants: 'const SERIALIZATION_VERSION_1 = 1; const SERIALIZATION_VERSION_2 = 2; const CURRENT_VERSION = 2;'"
+          },
+          {
+            "line": 1724,
+            "severity": "medium",
+            "category": "performance",
+            "description": "flatMap followed by filter could be optimized with reduce or for loop",
+            "suggestion": "Use reduce to avoid intermediate arrays: 'const terms = searchTokenize(query).reduce((acc, term) => { const processed = searchProcessTerm(term); return processed ? acc.concat(processed) : acc }, [])'"
+          },
+          {
+            "line": 1738,
+            "severity": "low",
+            "category": "performance",
+            "description": "reduce with object spread creates new object on each iteration",
+            "suggestion": "Use imperative loop or Object.assign: 'const boosts = {}; for (const field of fields) { boosts[field] = getOwnProperty(options.boost, field) || 1 }'"
+          },
+          {
+            "line": 2020,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "Multiple non-null assertions (!) without null checks",
+            "suggestion": "Add explicit null checks before using non-null assertions to prevent runtime errors"
+          },
+          {
+            "line": 2217,
+            "severity": "medium",
+            "category": "bug-risk",
+            "description": "toString() called on fieldValue without null check, could throw error",
+            "suggestion": "Add null check: 'stringifyField: (fieldValue: any) => (fieldValue == null ? '' : fieldValue.toString())'"
+          },
+          {
+            "line": 2251,
+            "severity": "low",
+            "category": "performance",
+            "description": "Array.includes for duplicate checking is O(n), could use Set for O(1)",
+            "suggestion": "For large term arrays, consider using a Set: 'const termSet = new Set(target); if (!termSet.has(term)) { target.push(term); termSet.add(term) }'"
+          },
+          {
+            "line": 2257,
+            "severity": "low",
+            "category": "performance",
+            "description": "Nested includes() calls create O(n²) complexity for assignUniqueTerms",
+            "suggestion": "Use Set for deduplication: 'const existingSet = new Set(target); for (const term of source) { if (!existingSet.has(term)) { target.push(term); existingSet.add(term) } }'"
+          }
+        ],
+        "overallScore": 78,
+        "summary": "MiniSearch.ts is a well-structured, feature-rich search library with solid TypeScript typing. Main concerns: (1) Excessive use of 'any' type reduces type safety (lines 62, 195, 225, 256, 413); (2) Multiple instances of unsafe JSON.parse without error handling (lines 1528, 1548) pose crash risks; (3) toString() called without null checks (line 2217) can throw errors; (4) Performance issues with repeated Set creation (lines 767, 859), flatMap+filter chains (line 1724), and O(n) duplicate checking (lines 2251, 2257); (5) Several non-null assertions without checks (lines 1119, 2020) risk runtime errors. Security: Generally good, no eval() or dangerous patterns, but needs JSON.parse error handling. The codebase shows mature engineering with good patterns like batching, vacuuming, and proper async handling. Recommended focus: add JSON parsing safety, replace 'any' with specific types, optimize hot paths with Set-based deduplication, and add null checks before non-null assertions."
+      },
+      "testCoverage": {
+        "file": "/tmp/pr-305-review/MiniSearch.ts",
+        "hasTests": true,
+        "testFiles": [
+          "/tmp/pr-305-review/MiniSearch.test.js"
+        ],
+        "untestedPaths": [
+          {
+            "type": "edge-case",
+            "location": "constructor (line 694-739): autoVacuum options validation",
+            "priority": "medium",
+            "reasoning": "While autoVacuum option is tested when set to true/false and with custom thresholds, there's no test for invalid autoVacuum option values (e.g., negative numbers, invalid objects). The code at line 699 handles null/true cases but doesn't validate other edge cases.",
+            "suggestedTest": "should throw or warn when autoVacuum options contain invalid values like negative minDirtCount or minDirtFactor greater than 1"
+          },
+          {
+            "type": "edge-case",
+            "location": "addAllAsync method (line 803-822): error handling",
+            "priority": "high",
+            "reasoning": "While addAllAsync is tested for successful completion, there's no test for what happens if add() throws an error mid-batch. The promise chain could leave the index in an inconsistent state.",
+            "suggestedTest": "should propagate errors thrown by the filter function with a clear stack trace indicating which result caused the error"
+          },
+          {
+            "type": "edge-case",
+            "location": "loadJSON static method (line 1524-1529): malformed JSON string",
+            "priority": "critical",
+            "reasoning": "Line 1528 calls JSON.parse but doesn't wrap it in try-catch. Malformed JSON will throw a cryptic SyntaxError instead of a helpful MiniSearch-specific error.",
+            "suggestedTest": "should throw a clear MiniSearch error when loadJSON receives malformed JSON string, not a raw JSON.parse SyntaxError"
+          },
+          {
+            "type": "edge-case",
+            "location": "loadJSONAsync static method (line 1544-1549): promise rejection handling",
+            "priority": "high",
+            "reasoning": "Similar to loadJSON, line 1548 JSON.parse can throw. Additionally, loadJSAsync could fail at various async points, but there are no tests for handling corrupted serialized data.",
+            "suggestedTest": "should reject the promise with a clear error when loadJSONAsync encounters corrupted index data during deserialization"
+          },
+          {
+            "type": "branch",
+            "location": "instantiateMiniSearch static method (line 1669-1694): unsupported version",
+            "priority": "critical",
+            "reasoning": "Lines 1679-1681 check serializationVersion and throw for incompatible versions. Tests verify v1 and v2, but don't test v0, v3, or completely missing version field.",
+            "suggestedTest": "should throw 'incompatible version' error when attempting to deserialize index with serializationVersion 0, 3, or undefined"
+          },
+          {
+            "type": "edge-case",
+            "location": "calcBM25Score function (line 2188-2199): division by zero in BM25",
+            "priority": "critical",
+            "reasoning": "Line 2198 divides by avgFieldLength. If avgFieldLength is 0 (no documents or empty fields), this causes Infinity. No test verifies BM25 behavior with zero-length fields.",
+            "suggestedTest": "should not produce Infinity or NaN scores when searching in documents with empty field values (zero avgFieldLength)"
+          }
+        ],
+        "coverageEstimate": 78,
+        "summary": "The MiniSearch test suite is comprehensive with 150+ test cases covering core functionality including add, remove, search, vacuum, serialization, and various edge cases. However, approximately 22% of critical paths remain untested. Key gaps include: (1) error handling for malformed JSON in loadJSON/loadJSONAsync (critical - can expose raw JSON.parse errors), (2) invalid serialization versions (critical - affects data integrity), (3) BM25 calculation with zero-length fields (critical - can produce Infinity/NaN scores), (4) error handling in user-provided callbacks like filter functions (high - can crash searches), (5) addAllAsync error mid-batch (high - can corrupt index), (6) edge cases in autoVacuum option validation, extreme parameter values, and Unicode tokenization edge cases (medium priority). The existing tests thoroughly cover happy paths and common error scenarios, but production-hardening would benefit from additional tests for data corruption scenarios, extreme inputs, and async operation failures."
+      },
+      "refactorings": {
+        "file": "/tmp/pr-305-review/MiniSearch.ts",
+        "suggestions": [
+          {
+            "type": "extract-function",
+            "location": "Lines 760-780 (add method)",
+            "impact": "high",
+            "description": "Extract complex term processing logic into a separate method. The nested loop with conditional array handling is repeated in both add() and remove() methods, making it a prime candidate for extraction.",
+            "before": "for (const field of fields) {\n  const fieldValue = extractField(document, field)\n  if (fieldValue == null) continue\n\n  const tokens = tokenize(stringifyField(fieldValue, field), field)\n  const fieldId = this._fieldIds[field]\n\n  const uniqueTerms = new Set(tokens).size\n  this.addFieldLength(shortDocumentId, fieldId, this._documentCount - 1, uniqueTerms)\n\n  for (const term of tokens) {\n    const processedTerm = processTerm(term, field)\n    if (Array.isArray(processedTerm)) {\n      for (const t of processedTerm) {\n        this.addTerm(fieldId, shortDocumentId, t)\n      }\n    } else if (processedTerm) {\n      this.addTerm(fieldId, shortDocumentId, processedTerm)\n    }\n  }\n}",
+            "after": "for (const field of fields) {\n  this.processDocumentField(document, field, shortDocumentId, \n    (fieldId, docId, term) => this.addTerm(fieldId, docId, term),\n    (docId, fieldId, count, length) => this.addFieldLength(docId, fieldId, count, length)\n  )\n}\n\nprivate processDocumentField(\n  document: T,\n  field: string,\n  documentId: number,\n  termCallback: (fieldId: number, docId: number, term: string) => void,\n  lengthCallback: (docId: number, fieldId: number, count: number, length: number) => void\n): void {\n  const { extractField, stringifyField, tokenize, processTerm } = this._options\n  const fieldValue = extractField(document, field)\n  if (fieldValue == null) return\n\n  const tokens = tokenize(stringifyField(fieldValue, field), field)\n  const fieldId = this._fieldIds[field]\n  const uniqueTerms = new Set(tokens).size\n  \n  lengthCallback(documentId, fieldId, this._documentCount - 1, uniqueTerms)\n\n  for (const term of tokens) {\n    const processedTerm = processTerm(term, field)\n    if (Array.isArray(processedTerm)) {\n      processedTerm.forEach(t => termCallback(fieldId, documentId, t))\n    } else if (processedTerm) {\n      termCallback(fieldId, documentId, processedTerm)\n    }\n  }\n}",
+            "benefits": "Eliminates code duplication between add() and remove() methods, reduces complexity, improves maintainability, and makes the term processing logic testable in isolation. The callback pattern allows different operations (add vs remove) while sharing the core processing logic."
+          },
+          {
+            "type": "simplify",
+            "location": "Lines 1699-1730 (executeQuery method)",
+            "impact": "high",
+            "description": "Extract the complex branching logic for different query types into separate methods to improve readability and reduce cognitive complexity.",
+            "before": "private executeQuery (query: Query, searchOptions: SearchOptions = {}): RawResult {\n  if (query === MiniSearch.wildcard) {\n    return this.executeWildcardQuery(searchOptions)\n  }\n\n  if (typeof query !== 'string') {\n    const options = { ...searchOptions, filter: undefined, ...query, queries: undefined }\n    const results = query.queries.map((subquery) => this.executeQuery(subquery, options))\n    const combined = this.combineResults(results, options.combineWith)\n\n    if (options.filter) {\n      for (const [docId, rawValue] of combined) {\n        const result = this.makeResult(docId, rawValue)\n        if (!options.filter(result)) combined.delete(docId)\n      }\n    }\n\n    return combined\n  }\n\n  const { tokenize, processTerm, searchOptions: globalSearchOptions } = this._options\n  const options = { tokenize, processTerm, ...globalSearchOptions, ...searchOptions }\n  const { tokenize: searchTokenize, processTerm: searchProcessTerm } = options\n  const terms = searchTokenize(query)\n    .flatMap((term: string) => searchProcessTerm(term))\n    .filter((term) => !!term) as string[]\n  const queries: QuerySpec[] = terms.map(termToQuerySpec(options))\n  const results = queries.map(query => this.executeQuerySpec(query, options))\n\n  return this.combineResults(results, options.combineWith)\n}",
+            "after": "private executeQuery (query: Query, searchOptions: SearchOptions = {}): RawResult {\n  if (query === MiniSearch.wildcard) {\n    return this.executeWildcardQuery(searchOptions)\n  }\n\n  if (typeof query !== 'string') {\n    return this.executeQueryCombination(query, searchOptions)\n  }\n\n  return this.executeStringQuery(query, searchOptions)\n}\n\nprivate executeQueryCombination(query: QueryCombination, searchOptions: SearchOptions): RawResult {\n  const options = { ...searchOptions, filter: undefined, ...query, queries: undefined }\n  const results = query.queries.map((subquery) => this.executeQuery(subquery, options))\n  const combined = this.combineResults(results, options.combineWith)\n\n  if (options.filter) {\n    this.applyFilterToResults(combined, options.filter)\n  }\n\n  return combined\n}\n\nprivate executeStringQuery(query: string, searchOptions: SearchOptions): RawResult {\n  const { tokenize, processTerm, searchOptions: globalSearchOptions } = this._options\n  const options = { tokenize, processTerm, ...globalSearchOptions, ...searchOptions }\n  const { tokenize: searchTokenize, processTerm: searchProcessTerm } = options\n  \n  const terms = searchTokenize(query)\n    .flatMap((term: string) => searchProcessTerm(term))\n    .filter((term) => !!term) as string[]\n  \n  const queries: QuerySpec[] = terms.map(termToQuerySpec(options))\n  const results = queries.map(query => this.executeQuerySpec(query, options))\n\n  return this.combineResults(results, options.combineWith)\n}\n\nprivate applyFilterToResults(results: RawResult, filter: (result: SearchResult) => boolean): void {\n  for (const [docId, rawValue] of results) {\n    const result = this.makeResult(docId, rawValue)\n    if (!filter(result)) results.delete(docId)\n  }\n}",
+            "benefits": "Reduces method complexity from handling three distinct query types to dispatching to specialized methods. Each method now has a single, clear responsibility. Improves testability by allowing each query execution path to be tested independently."
+          },
+          {
+            "type": "extract-function",
+            "location": "Lines 1098-1138 (performVacuuming method)",
+            "impact": "medium",
+            "description": "Extract the core vacuuming logic into smaller methods. This 40-line method handles multiple responsibilities: checking conditions, iterating the index, and cleanup logic.",
+            "before": "// 40-line performVacuuming method",
+            "after": "private async performVacuuming (options: VacuumOptions, conditions?: VacuumConditions): Promise<void> {\n  const initialDirtCount = this._dirtCount\n\n  if (this.vacuumConditionsMet(conditions)) {\n    await this.cleanIndexEntries(options)\n    this._dirtCount -= initialDirtCount\n  }\n\n  await null\n  this._currentVacuum = this._enqueuedVacuum\n  this._enqueuedVacuum = null\n}\n\nprivate async cleanIndexEntries(options: VacuumOptions): Promise<void> {\n  // ... extracted logic\n}\n\nprivate cleanFieldsData(fieldsData: FieldTermData): void {\n  // ... extracted logic\n}",
+            "benefits": "Separates concerns by breaking down a long method into focused, single-responsibility methods. Makes the code more testable and easier to understand. The main vacuuming orchestration is now clear, while cleanup details are abstracted."
+          },
+          {
+            "type": "simplify",
+            "location": "Lines 803-822 (addAllAsync method)",
+            "impact": "medium",
+            "description": "Simplify the reduce pattern by using a more straightforward for-loop with async batching.",
+            "before": "// Complex reduce pattern with promise chaining",
+            "after": "async addAllAsync (documents: readonly T[], options: { chunkSize?: number } = {}): Promise<void> {\n  const { chunkSize = 10 } = options\n  \n  for (let i = 0; i < documents.length; i += chunkSize) {\n    const chunk = documents.slice(i, i + chunkSize)\n    this.addAll(chunk)\n    \n    if (i + chunkSize < documents.length) {\n      await new Promise(resolve => setTimeout(resolve, 0))\n    }\n  }\n}",
+            "benefits": "Much simpler and clearer logic using async/await instead of promise chaining with reduce. Easier to understand batching behavior. Reduces cognitive complexity from tracking accumulator state through reduce iterations."
+          }
+        ],
+        "summary": "The MiniSearch.ts file is a well-structured search engine implementation, but contains several opportunities for refactoring. The highest-impact improvements are: (1) extracting duplicated term processing logic between add/remove methods, (2) simplifying the complex executeQuery branching into specialized methods, and (3) breaking down the large termResults scoring method. Medium-impact improvements include modernizing array deduplication with Sets, simplifying async batching logic, and extracting vacuuming sub-operations. Lower-impact polish includes using Object.entries() for cleaner iteration patterns. These refactorings would significantly improve maintainability, testability, and code clarity without changing functionality."
+      }
+    },
+    {
+      "file": "src/MiniSearch.test.js",
+      "codeQuality": {
+        "file": "/tmp/pr-305-review/MiniSearch.test.js",
+        "issues": [
+          {
+            "line": 189,
+            "severity": "medium",
+            "category": "maintainability",
+            "description": "Direct mutation of global console.warn object without proper cleanup guarantee",
+            "suggestion": "Use jest.spyOn(console, 'warn').mockImplementation() instead of direct assignment, which provides better cleanup and avoids potential test pollution. Example: const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})"
+          },
+          {
+            "line": 408,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Setting console.warn to undefined can cause runtime errors if other code tries to call it",
+            "suggestion": "Instead of setting console.warn to undefined, use jest.spyOn(console, 'warn').mockImplementation() or delete the property temporarily. This prevents potential crashes from code that assumes console.warn exists"
+          },
+          {
+            "line": 578,
+            "severity": "high",
+            "category": "bug-risk",
+            "description": "Direct mutation of internal property ms._dirtCount in test - violates encapsulation and makes tests brittle",
+            "suggestion": "Avoid directly manipulating internal properties (_dirtCount). Either expose a test-only API, use proper public methods to trigger the desired state, or mock the underlying behavior properly"
+          },
+          {
+            "line": 667,
+            "severity": "medium",
+            "category": "performance",
+            "description": "Potential infinite loop with while (ms.isVacuuming) if _currentVacuum never resolves",
+            "suggestion": "Add a timeout mechanism or maximum iteration count to prevent infinite loops in case of bugs: let iterations = 0; while (ms.isVacuuming && iterations++ < 100) { await ms._currentVacuum }. Also consider using jest.setTimeout() for async tests"
+          }
+        ],
+        "overallScore": 78,
+        "summary": "The test file is comprehensive with 2,012 lines covering extensive functionality. Key concerns: (1) Direct console manipulation creates test pollution risks (lines 189, 408), (2) Direct access to internal properties (_dirtCount, _currentVacuum) violates encapsulation making tests brittle, (3) Potential infinite loops in async vacuum tests without timeout protection, (4) Inconsistent async patterns mixing .then() and async/await, (5) Performance concerns with repeated JSON serialization. Strengths include good test coverage, clear describe/it structure, and thorough edge case testing. No security vulnerabilities detected (no eval, proper use of JSON methods). Recommended improvements: use jest.spyOn for mocking, add test helpers to reduce duplication, standardize on async/await, and avoid accessing private properties directly."
+      },
+      "testCoverage": {
+        "file": "/tmp/pr-305-review/MiniSearch.test.js",
+        "hasTests": true,
+        "testFiles": [
+          "/tmp/pr-305-review/MiniSearch.test.js"
+        ],
+        "untestedPaths": [
+          {
+            "type": "edge-case",
+            "location": "Filter function throwing error in complex queries",
+            "priority": "high",
+            "reasoning": "The new filtering feature added in this PR applies filters at the QueryCombination level, but there are no tests verifying error handling when the filter function throws an exception during nested query execution.",
+            "suggestedTest": "should propagate errors from filter functions in nested query combinations with clear error messages"
+          }
+        ],
+        "coverageEstimate": 82,
+        "summary": "MiniSearch.test.js provides comprehensive test coverage for core functionality including CRUD operations, search with various options, serialization, and vacuuming. The test suite excels at testing main worksearch ranking quality, and integration scenarios. However, coverage gaps exist in: (1) edge case validation for configuration options (BM25 params, weights, maxFuzzy boundaries), (2) error handling paths in async operations and custom functions, (3) getter methods like dirtFactor and termCount, (4) boundary conditions for falsy ID values and empty inputs, and (5) case variations for combineWith operators. The tests are well-structured with good use of fixtures and real-world scenarios (movie/song ranking), but would benefit from more negative test cases and parameter validation tests. Estimated coverage: 82% - strong on happy paths and integration, needs improvement on edge cases and error conditions."
+      },
+      "refactorings": {
+        "file": "/tmp/pr-305-review/MiniSearch.test.js",
+        "suggestions": [
+          {
+            "type": "extract-function",
+            "location": "Multiple test suites (lines 186-195, 356-365, 433-441)",
+            "impact": "medium",
+            "description": "Extract console.warn mocking setup and teardown into a reusable helper function. This pattern is repeated three times across different test suites.",
+            "before": "let ms, _warn\nbeforeEach(() => {\n  ms = new MiniSearch({ fields: ['title', 'text'] })\n  ms.addAll(documents)\n  _warn = console.warn\n  console.warn = jest.fn()\n})\n\nafterEach(() => {\n  console.warn = _warn\n})",
+            "after": "function setupConsoleWarnMock() {\n  const _warn = console.warn\n  console.warn = jest.fn()\n  return () => { console.warn = _warn }\n}\n\nlet ms, restoreConsoleWarn\nbeforeEach(() => {\n  ms = new MiniSearch({ fields: ['title', 'text'] })\n  ms.addAll(documents)\n  restoreConsoleWarn = setupConsoleWarnMock()\n})\n\nafterEach(() => {\n  restoreConsoleWarn()\n})",
+            "benefits": "Reduces code duplication, makes the pattern more maintainable, and provides a single place to modify console mocking behavior if needed. Clearer intent through naming."
+          },
+          {
+            "type": "extract-function",
+            "location": "Throughout the file (68+ occurrences)",
+            "impact": "medium",
+            "description": "Extract repeated MiniSearch instance creation with common configurations into factory functions. Many tests create instances with identical options.",
+            "before": "const ms = new MiniSearch({ fields: ['title', 'text'] })\nms.addAll(documents)",
+            "after": "function createSearchWithDocuments(documents, options = { fields: ['title', 'text'] }) {\n  const ms = new MiniSearch(options)\n  ms.addAll(documents)\n  return ms\n}\n\nconst ms = createSearchWithDocuments(documents)",
+            "benefits": "Reduces boilerplate, makes tests more readable by hiding setup details, and provides consistency across tests. Changes to common setup only need to be made in one place."
+          }
+        ],
+        "summary": "The test file contains 2,012 lines with comprehensive test coverage for MiniSearch functionality. Key refactoring opportunities include: (1) Extract repeated console.warn mocking setup into a reusable helper (medium impact - reduces duplication in 3 places); (2) Create factory functions for common MiniSearch instance creation patterns (medium impact - affects 68+ test cases); (3) Extract test data fixtures into a shared module to reduce duplication of sample documents across 4+ test suites (low-medium impact); (4) Modernize tests using Jest's test.each for parameterized testing (low impact - improves readability); (5) Create reusable helpers for common patterns like custom extractField and index normalization (medium impact). Overall, the tests are well-structured but suffer from significant code duplication that could be addressed through better use of helper functions and test utilities. The file would benefit from a test-utilities module containing common setup patterns, mock helpers, and shared fixtures."
+      }
+    }
+  ],
+  "summary": {
+    "totalFiles": 2,
+    "overallScore": 78,
+    "criticalIssues": 0,
+    "highPriorityTests": 5,
+    "refactoringOpportunities": 12
+  },
+  "recommendations": [
+    {
+      "priority": "critical",
+      "category": "Error Handling",
+      "description": "Add try-catch blocks around JSON.parse calls in loadJSON and loadJSONAsync methods to prevent application crashes from malformed input. Currently these methods expose raw SyntaxError instead of helpful MiniSearch-specific errors.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    },
+    {
+      "priority": "critical",
+      "category": "Test Coverage",
+      "description": "Add tests for unsupported serialization versions and malformed JSON to prevent data corruption. The instantiateMiniSearch method checks versions but edge cases (v0, v3, missing version) are untested.",
+      "files": [
+        "src/MiniSearch.ts",
+        "src/MiniSearch.test.js"
+      ]
+    },
+    {
+      "priority": "critical",
+      "category": "Bug Risk",
+      "description": "Fix BM25 score calculation to handle zero-length fields gracefully. Division by zero in avgFieldLength can produce Infinity/NaN scores, breaking search results.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    },
+    {
+      "priority": "high",
+      "category": "Type Safety",
+      "description": "Replace 'any' types with more specific types or 'unknown' to improve type safety. Multiple function parameters and return types use 'any', reducing TypeScript's effectiveness in catching type errors.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    },
+    {
+      "priority": "high",
+      "category": "Code Quality",
+      "description": "Add error handling for user-provided callback functions (filter, boostDocument, extractField) to prevent crashes from thrown exceptions. Wrap callback invocations in try-catch blocks with clear error messages.",
+      "files": [
+        "src/MiniSearch.ts"
+      ]
+    }
+  ],
+  "metadata": {
+    "analyzedAt": "2026-09-27T00:00:00.000Z",
+    "duration": 1036582,
+    "agentVersions": {
+      "codeQuality": "1.0",
+      "testCoverage": "1.0",
+      "refactoring": "1.0"
+    }
+  }
+}
